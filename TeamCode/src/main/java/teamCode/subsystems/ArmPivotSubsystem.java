@@ -17,7 +17,6 @@ public class ArmPivotSubsystem extends SubsystemBase
 
     public ArmPivotSubsystem()
     {
-        armExtend = hardwareMap.get(DcMotor.class, "armExtendMotor");
         armPivot = hardwareMap.get(DcMotor.class, "armPivotMotor");
     }
 

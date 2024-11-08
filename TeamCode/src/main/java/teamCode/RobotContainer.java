@@ -3,15 +3,14 @@ package teamCode;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 
+import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-import teamCode.commands.ArmPivotHighBarCommand;
-import teamCode.commands.ArmPivotHighBasketCommand;
-import teamCode.commands.ArmPivotLowBarCommand;
-import teamCode.commands.ArmPivotLowBasketCommand;
 import teamCode.commands.IntakePivotCommand;
 import teamCode.commands.IntakeWheelCommand;
 import teamCode.commands.ReverseWheelCommand;
@@ -20,34 +19,38 @@ import teamCode.subsystems.ArmPivotSubsystem;
 import teamCode.subsystems.IntakePivotSubsystem;
 import teamCode.subsystems.IntakeWheelSubsystem;
 
-public class RobotContainer
+@TeleOp(name= "Sting-Ray TeleOp")
+public class RobotContainer extends CommandOpMode
 {
-    private final IntakePivotSubsystem m_intakePivotSubsystem;
-    private final IntakeWheelSubsystem m_intakeWheelSubsystem;
-    private final GamepadEx driver1 = new GamepadEx(gamepad1);
-    private final GamepadEx driver2 = new GamepadEx(gamepad2);
-    private final ArmExtendSubsystem m_extendSubsystem;
-    private final ArmPivotSubsystem m_pivotSubsystem;
+    private IntakePivotSubsystem m_intakePivotSubsystem;
+    private IntakeWheelSubsystem m_intakeWheelSubsystem;
+    private GamepadEx driver1 = new GamepadEx(gamepad1);
+    private GamepadEx driver2 = new GamepadEx(gamepad2);
+    private ArmExtendSubsystem m_extendSubsystem;
+    private ArmPivotSubsystem m_pivotSubsystem;
 
-    public RobotContainer(IntakeWheelSubsystem intakeWheelSubsystem)
+    @Override
+    public void initialize()
     {
-        m_intakeWheelSubsystem = intakeWheelSubsystem;
+        m_intakeWheelSubsystem = new IntakeWheelSubsystem();
         m_intakePivotSubsystem = new IntakePivotSubsystem();
 
         m_extendSubsystem = new ArmExtendSubsystem();
 
         m_pivotSubsystem = new ArmPivotSubsystem();
-        configureButtonBindings();
-    }
+        m_intakeWheelSubsystem = new IntakeWheelSubsystem();
+        m_intakePivotSubsystem = new IntakePivotSubsystem();
 
-    public void configureButtonBindings()
-    {
+        m_extendSubsystem = new ArmExtendSubsystem();
+
+        m_pivotSubsystem = new ArmPivotSubsystem();
+
         GamepadButton intakeWheelButton = new GamepadButton(driver2, GamepadKeys.Button.A); // Change to right triggers
         GamepadButton reverseWheelButton = new GamepadButton(driver2, GamepadKeys.Button.B); // change to left trigger
 
         GamepadButton intakePivotButton = new GamepadButton(driver2, GamepadKeys.Button.RIGHT_BUMPER);
 
-//        GamepadButton ExtendButton = new GamepadButton(driver2, GamepadKeys.Button.B);
+//      GamepadButton ExtendButton = new GamepadButton(driver2, GamepadKeys.Button.B);
         GamepadButton PivotButtonHB = new GamepadButton(driver2, GamepadKeys.Button.DPAD_UP);
         GamepadButton PivotButtonHC = new GamepadButton(driver2, GamepadKeys.Button.DPAD_RIGHT);
         GamepadButton PivotButtonLB = new GamepadButton(driver2, GamepadKeys.Button.DPAD_DOWN);
@@ -67,6 +70,6 @@ public class RobotContainer
 //        PivotButtonLB.whenPressed(new ArmPivotLowBasketCommand(m_pivotSubsystem));
 //        PivotButtonLC.whenPressed(new ArmPivotLowBarCommand(m_pivotSubsystem));
 
-
     }
+
 }

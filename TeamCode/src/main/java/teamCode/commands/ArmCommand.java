@@ -29,10 +29,6 @@ public class ArmCommand extends CommandBase
     @Override
     public void execute()
     {
-        if (gamepad2.x)
-        {
-            ArmExtendSubsystem
-        }
     }
 
     public void end()

@@ -23,7 +23,7 @@ public class ReverseWheelCommand extends CommandBase
     @Override
     public void execute()
     {
-        m_intakeWheelSubsystem.intakeWheelMove(-0.25);
+        m_intakeWheelSubsystem.moveIntake(-0.25);
     }
 
     @Override
