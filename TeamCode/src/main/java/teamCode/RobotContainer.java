@@ -1,75 +1,101 @@
 package teamCode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
-
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.arcrobotics.ftclib.hardware.motors.CRServo;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.ftccommon.internal.manualcontrol.parameters.ImuParameters;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-import teamCode.commands.IntakePivotCommand;
-import teamCode.commands.IntakeWheelCommand;
-import teamCode.commands.ReverseWheelCommand;
-import teamCode.subsystems.ArmExtendSubsystem;
-import teamCode.subsystems.ArmPivotSubsystem;
+import teamCode.commands.DriveFieldOrientedCommand;
+import teamCode.commands.PivotIntakeCommand;
+import teamCode.commands.SpinIntakeCommand;
+import teamCode.subsystems.DriveSubsystem;
 import teamCode.subsystems.IntakePivotSubsystem;
 import teamCode.subsystems.IntakeWheelSubsystem;
 
-@TeleOp(name= "Sting-Ray TeleOp")
+
+@TeleOp(name = "Sample TeleOp")
 public class RobotContainer extends CommandOpMode
 {
-    private IntakePivotSubsystem m_intakePivotSubsystem;
-    private IntakeWheelSubsystem m_intakeWheelSubsystem;
-    private GamepadEx driver1 = new GamepadEx(gamepad1);
-    private GamepadEx driver2 = new GamepadEx(gamepad2);
-    private ArmExtendSubsystem m_extendSubsystem;
-    private ArmPivotSubsystem m_pivotSubsystem;
+   private DriveSubsystem m_driveSubsystem;
+   private IntakeWheelSubsystem m_intakeWheelSubsystem;
+   private IntakePivotSubsystem m_intakePivotSubsystem;
+   private DriveFieldOrientedCommand m_driveFieldOrientedCommand;
+   private PivotIntakeCommand m_pivotIntakeCommand;
+   private SpinIntakeCommand m_spinIntakeCommand;
+   private MecanumDrive m_drive;
+   private CRServo m_intakeWheelServo;
+   private GamepadEx m_driver1;
+   private GamepadEx m_driver2;
+   private Button m_rightBumper;
+   private IMU m_imu;
+   private IMU.Parameters m_imuParameters;
 
     @Override
     public void initialize()
     {
-        m_intakeWheelSubsystem = new IntakeWheelSubsystem();
-        m_intakePivotSubsystem = new IntakePivotSubsystem();
+        this.m_intakeWheelServo = new CRServo(hardwareMap, "intakeWheelServo");
+//        m_intakeWheelSubsystem = new IntakeWheelSubsystem(hardwareMap, "intakeWheelServo");
+        this.m_intakeWheelSubsystem = new IntakeWheelSubsystem(this.m_intakeWheelServo);
+        this.m_intakePivotSubsystem = new IntakePivotSubsystem(hardwareMap, "intakePivotServo");
+        this.m_pivotIntakeCommand = new PivotIntakeCommand(this.m_intakePivotSubsystem);
 
-        m_extendSubsystem = new ArmExtendSubsystem();
+        this.m_drive = new MecanumDrive
+        (
+            new Motor(hardwareMap, "frontLeft", Motor.GoBILDA.RPM_312),
+            new Motor(hardwareMap, "frontRight", Motor.GoBILDA.RPM_312),
+            new Motor(hardwareMap, "backLeft", Motor.GoBILDA.RPM_312),
+            new Motor(hardwareMap, "backRight", Motor.GoBILDA.RPM_312)
+        );
+        this.m_driveSubsystem = new DriveSubsystem(this.m_drive);
 
-        m_pivotSubsystem = new ArmPivotSubsystem();
-        m_intakeWheelSubsystem = new IntakeWheelSubsystem();
-        m_intakePivotSubsystem = new IntakePivotSubsystem();
+        this.m_imu = hardwareMap.get(IMU.class, "imu");
+        this.m_imuParameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
+                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+        ));
 
-        m_extendSubsystem = new ArmExtendSubsystem();
+        this.m_imu.initialize(this.m_imuParameters);
 
-        m_pivotSubsystem = new ArmPivotSubsystem();
+        this.m_driver1 = new GamepadEx(gamepad1);
+        this.m_driver2 = new GamepadEx(gamepad2);
 
-        GamepadButton intakeWheelButton = new GamepadButton(driver2, GamepadKeys.Button.A); // Change to right triggers
-        GamepadButton reverseWheelButton = new GamepadButton(driver2, GamepadKeys.Button.B); // change to left trigger
+ //       this.m_driveFieldOrientedCommand = new DriveFieldOrientedCommand(this.m_driveSubsystem, () -> this.m_driver1.getLeftX(),
+        //       () -> this.m_driver1.getLeftY(), () -> this.m_driver1)
 
-        GamepadButton intakePivotButton = new GamepadButton(driver2, GamepadKeys.Button.RIGHT_BUMPER);
+        this.m_driveFieldOrientedCommand = new DriveFieldOrientedCommand(this.m_driveSubsystem, () -> this.m_driver1.getLeftX(),
+                () -> this.m_driver1.getLeftY(), () -> this.m_driver1.getRightX(),  () -> this.m_imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
 
-//      GamepadButton ExtendButton = new GamepadButton(driver2, GamepadKeys.Button.B);
-        GamepadButton PivotButtonHB = new GamepadButton(driver2, GamepadKeys.Button.DPAD_UP);
-        GamepadButton PivotButtonHC = new GamepadButton(driver2, GamepadKeys.Button.DPAD_RIGHT);
-        GamepadButton PivotButtonLB = new GamepadButton(driver2, GamepadKeys.Button.DPAD_DOWN);
-        GamepadButton PivotButtonLC = new GamepadButton(driver2, GamepadKeys.Button.DPAD_LEFT);
+        this.m_rightBumper = (new GamepadButton(this.m_driver2, GamepadKeys.Button.RIGHT_BUMPER))
+                .whenPressed(this.m_pivotIntakeCommand);
 
-
-
-        intakeWheelButton.whileHeld(new IntakeWheelCommand(m_intakeWheelSubsystem));
-        reverseWheelButton.whileHeld(new ReverseWheelCommand(m_intakeWheelSubsystem));
-
-        intakePivotButton.whenPressed(new IntakePivotCommand(m_intakePivotSubsystem));
+        this.m_spinIntakeCommand = new SpinIntakeCommand(this.m_intakeWheelSubsystem, () -> this.m_driver2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER),
+                () -> this.m_driver2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
 
-        //        ExtendButton.whenPressed(new ArmExtendSubsystem(m_extendSubsystem));
-//        PivotButtonHB.whenPressed(new ArmPivotHighBasketCommand(m_pivotSubsystem));
-//        PivotButtonHC.whenPressed(new ArmPivotHighBarCommand(m_pivotSubsystem));
-//        PivotButtonLB.whenPressed(new ArmPivotLowBasketCommand(m_pivotSubsystem));
-//        PivotButtonLC.whenPressed(new ArmPivotLowBarCommand(m_pivotSubsystem));
+
+        System.out.println("Running!");
+
+        register(m_driveSubsystem);
+        register(m_intakeWheelSubsystem);
+
+        m_driveSubsystem.setDefaultCommand(m_driveFieldOrientedCommand);
+        m_intakeWheelSubsystem.setDefaultCommand(m_spinIntakeCommand);
+
+
 
     }
-
 }

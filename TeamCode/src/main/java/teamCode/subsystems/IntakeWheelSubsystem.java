@@ -1,22 +1,24 @@
 package teamCode.subsystems;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.arcrobotics.ftclib.hardware.motors.CRServo;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+//import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class IntakeWheelSubsystem extends SubsystemBase
 {
-    private CRServo intakeWheel;
+    private final CRServo m_intakeWheelServo;
 
-    public IntakeWheelSubsystem()
+    public IntakeWheelSubsystem(CRServo wheel) //HardwareMap hMap, String name
     {
-        intakeWheel = hardwareMap.get(CRServo.class, "intakeWheelServo");
+        this.m_intakeWheelServo = wheel; //this.m_intakeWheelServo = hMap.get(CRServo.class, name);
+        this.m_intakeWheelServo.setRunMode(Motor.RunMode.VelocityControl);
     }
 
-    public void moveIntake(double pos)
+    // Spins the intake wheel forwards, or in reverse.
+    public void spinIntake(double speed)
     {
-        intakeWheel.setPower(pos);
+        this.m_intakeWheelServo.set(speed);
     }
 }
