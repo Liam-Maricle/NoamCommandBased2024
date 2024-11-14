@@ -13,6 +13,12 @@ public class DriveSubsystem extends SubsystemBase
 
     public void headingDrive(double leftX, double leftY, double rightX, double imu)
     {
-        m_drive.driveFieldCentric(leftX * -1, leftY * -1, rightX * -1, imu);
+        m_drive.driveFieldCentric
+        (
+            leftX * leftX * leftX * -1,
+            leftY * leftY * leftY * -1,
+            rightX * -1,
+            imu
+        );
     }
 }

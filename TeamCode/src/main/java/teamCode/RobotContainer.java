@@ -21,8 +21,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 import teamCode.commands.DriveFieldOrientedCommand;
 import teamCode.commands.PivotIntakeCommand;
+import teamCode.commands.ResetGyroCommand;
 import teamCode.commands.SpinIntakeCommand;
 import teamCode.subsystems.DriveSubsystem;
+import teamCode.subsystems.GyroSubsystem;
 import teamCode.subsystems.IntakePivotSubsystem;
 import teamCode.subsystems.IntakeWheelSubsystem;
 
@@ -33,9 +35,11 @@ public class RobotContainer extends CommandOpMode
    private DriveSubsystem m_driveSubsystem;
    private IntakeWheelSubsystem m_intakeWheelSubsystem;
    private IntakePivotSubsystem m_intakePivotSubsystem;
+   private GyroSubsystem m_gyroSubsystem;
    private DriveFieldOrientedCommand m_driveFieldOrientedCommand;
    private PivotIntakeCommand m_pivotIntakeCommand;
    private SpinIntakeCommand m_spinIntakeCommand;
+   private ResetGyroCommand m_resetGyroCommand;
    private MecanumDrive m_drive;
    private CRServo m_intakeWheelServo;
    private GamepadEx m_driver1;
@@ -43,16 +47,27 @@ public class RobotContainer extends CommandOpMode
    private Button m_rightBumper;
    private IMU m_imu;
    private IMU.Parameters m_imuParameters;
+   private Button m_gyroResetButton;
 
     @Override
     public void initialize()
     {
+        this.m_imu = hardwareMap.get(IMU.class, "imu");
+        this.m_imuParameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
+                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+        ));
+
+        this.m_imu.initialize(this.m_imuParameters);
+
         this.m_intakeWheelServo = new CRServo(hardwareMap, "intakeWheelServo");
 //        m_intakeWheelSubsystem = new IntakeWheelSubsystem(hardwareMap, "intakeWheelServo");
         this.m_intakeWheelSubsystem = new IntakeWheelSubsystem(this.m_intakeWheelServo);
         this.m_intakePivotSubsystem = new IntakePivotSubsystem(hardwareMap, "intakePivotServo");
-        this.m_pivotIntakeCommand = new PivotIntakeCommand(this.m_intakePivotSubsystem);
+        this.m_gyroSubsystem = new GyroSubsystem(this.m_imu);
 
+        this.m_pivotIntakeCommand = new PivotIntakeCommand(this.m_intakePivotSubsystem);
+        this.m_resetGyroCommand = new ResetGyroCommand(this.m_gyroSubsystem);
         this.m_drive = new MecanumDrive
         (
             new Motor(hardwareMap, "frontLeft", Motor.GoBILDA.RPM_312),
@@ -62,16 +77,11 @@ public class RobotContainer extends CommandOpMode
         );
         this.m_driveSubsystem = new DriveSubsystem(this.m_drive);
 
-        this.m_imu = hardwareMap.get(IMU.class, "imu");
-        this.m_imuParameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
-                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
-        ));
-
-        this.m_imu.initialize(this.m_imuParameters);
 
         this.m_driver1 = new GamepadEx(gamepad1);
         this.m_driver2 = new GamepadEx(gamepad2);
+        this.m_gyroResetButton = (new GamepadButton(this.m_driver1, GamepadKeys.Button.START))
+                .whenPressed(this.m_resetGyroCommand);
 
  //       this.m_driveFieldOrientedCommand = new DriveFieldOrientedCommand(this.m_driveSubsystem, () -> this.m_driver1.getLeftX(),
         //       () -> this.m_driver1.getLeftY(), () -> this.m_driver1)
