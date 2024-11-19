@@ -10,9 +10,9 @@ public class PivotIntakeCommand extends CommandBase
     //    private final IntakePivotSubsystem m_intakePivotSubsystem;
     private int position;
 
-    public PivotIntakeCommand(IntakePivotSubsystem pivot)
+    public PivotIntakeCommand(IntakePivotSubsystem pivotSubsystem)
     {
-        this.m_intakePivotSubsystem = pivot;
+        this.m_intakePivotSubsystem = pivotSubsystem;
         position = 0;
         addRequirements(this.m_intakePivotSubsystem);
     }

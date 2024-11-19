@@ -21,4 +21,8 @@ public class IntakeWheelSubsystem extends SubsystemBase
     {
         this.m_intakeWheelServo.set(speed);
     }
+    public void spinIntake(int spin)
+    {
+        this.m_intakeWheelServo.setTargetPosition(spin);
+    }
 }
