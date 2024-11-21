@@ -11,7 +11,7 @@ public class LiftArmSubsystem extends SubsystemBase
     public LiftArmSubsystem(Motor liftArmMotor)
     {
         this.m_liftArmMotor = liftArmMotor;
-        this.m_liftArmMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
+        this.m_liftArmMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
     }
 
     // Write methods below.
@@ -22,6 +22,8 @@ public class LiftArmSubsystem extends SubsystemBase
 
     public void liftArm(int lift)
     {
+        this.m_liftArmMotor.setRunMode(Motor.RunMode.PositionControl);
         this.m_liftArmMotor.setTargetPosition(lift);
+        this.m_liftArmMotor.set(0.5);
     }
 }

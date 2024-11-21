@@ -6,13 +6,13 @@ import java.util.function.DoubleSupplier;
 
 import teamCode.subsystems.IntakeWheelSubsystem;
 
-public class SpinIntakeCommand extends CommandBase
+public class IntakeWheelCommand extends CommandBase
 {
     private final IntakeWheelSubsystem m_intakeWheelSubsystem;
     private DoubleSupplier m_rightTriggerValue;
     private DoubleSupplier m_leftTriggerValue;
 
-    public SpinIntakeCommand(IntakeWheelSubsystem wheel, DoubleSupplier rightTrigger, DoubleSupplier leftTrigger)
+    public IntakeWheelCommand(IntakeWheelSubsystem wheel, DoubleSupplier rightTrigger, DoubleSupplier leftTrigger)
     {
         this.m_intakeWheelSubsystem = wheel;
         this.m_rightTriggerValue = rightTrigger;

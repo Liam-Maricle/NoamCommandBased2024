@@ -4,13 +4,13 @@ import com.arcrobotics.ftclib.command.CommandBase;
 
 import teamCode.subsystems.IntakePivotSubsystem;
 
-public class PivotIntakeCommand extends CommandBase
+public class IntakePivotCommand extends CommandBase
 {
     private final IntakePivotSubsystem m_intakePivotSubsystem;
     //    private final IntakePivotSubsystem m_intakePivotSubsystem;
     private int position;
 
-    public PivotIntakeCommand(IntakePivotSubsystem pivotSubsystem)
+    public IntakePivotCommand(IntakePivotSubsystem pivotSubsystem)
     {
         this.m_intakePivotSubsystem = pivotSubsystem;
         position = 0;

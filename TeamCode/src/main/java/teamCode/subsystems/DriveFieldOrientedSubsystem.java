@@ -3,10 +3,10 @@ package teamCode.subsystems;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 
-public class DriveSubsystem extends SubsystemBase
+public class DriveFieldOrientedSubsystem extends SubsystemBase
 {
     public MecanumDrive m_drive;
-    public DriveSubsystem(MecanumDrive drive)
+    public DriveFieldOrientedSubsystem(MecanumDrive drive)
     {
         this.m_drive = drive;
     }

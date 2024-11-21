@@ -1,6 +1,7 @@
 package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 
 import teamCode.subsystems.ExtendArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
@@ -19,13 +20,10 @@ public class ArmPositionCloseSampleCommand extends CommandBase
         this.m_liftArmSubsystem = liftArmSubsystem;
         this.m_extendArmSubsystem = extendArmSubsystem;
 
-        addRequirements(m_liftArmSubsystem);
-        addRequirements(m_extendArmSubsystem);
+        addRequirements(m_liftArmSubsystem, m_extendArmSubsystem);
 
         this.m_lift = lift;
         this.m_extend = extend;
-        lift = -13;
-        extend = -588;
     }
 
     @Override
@@ -39,5 +37,17 @@ public class ArmPositionCloseSampleCommand extends CommandBase
     {
         this.m_liftArmSubsystem.liftArm(m_lift);
         this.m_extendArmSubsystem.extendArm(m_extend);
+    }
+
+    @Override
+    public void end(boolean interrupted)
+    {
+
+    }
+
+    @Override
+    public boolean isFinished()
+    {
+        return true;
     }
 }

@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -24,10 +25,10 @@ import teamCode.commands.ArmPositionLowChamberCommand;
 import teamCode.commands.DriveFieldOrientedCommand;
 import teamCode.commands.ExtendArmCommand;
 import teamCode.commands.LiftArmCommand;
-import teamCode.commands.PivotIntakeCommand;
+import teamCode.commands.IntakePivotCommand;
 import teamCode.commands.ResetGyroCommand;
-import teamCode.commands.SpinIntakeCommand;
-import teamCode.subsystems.DriveSubsystem;
+import teamCode.commands.IntakeWheelCommand;
+import teamCode.subsystems.DriveFieldOrientedSubsystem;
 import teamCode.subsystems.ExtendArmSubsystem;
 import teamCode.subsystems.GyroSubsystem;
 import teamCode.subsystems.IntakePivotSubsystem;
@@ -38,7 +39,7 @@ import teamCode.subsystems.LiftArmSubsystem;
 @TeleOp(name = "Sting-Ray")
 public class RobotContainer extends CommandOpMode
 {
-   private DriveSubsystem m_driveSubsystem;
+   private DriveFieldOrientedSubsystem m_driveFieldOrientedSubsystem;
    private ExtendArmSubsystem m_extendArmSubsystem;
    private LiftArmSubsystem m_liftArmSubsystem;
    private IntakeWheelSubsystem m_intakeWheelSubsystem;
@@ -48,8 +49,8 @@ public class RobotContainer extends CommandOpMode
    private DriveFieldOrientedCommand m_driveFieldOrientedCommand;
    private ExtendArmCommand m_extendArmCommand;
    private LiftArmCommand m_liftArmCommand;
-   private PivotIntakeCommand m_pivotIntakeCommand;
-   private SpinIntakeCommand m_spinIntakeCommand;
+   private IntakePivotCommand m_intakePivotCommand;
+   private IntakeWheelCommand m_intakeWheelCommand;
    private ResetGyroCommand m_resetGyroCommand;
    private ArmPositionAscentCommand m_armPositionAscentCommand;
    private ArmPositionCloseSampleCommand m_armPositionCloseSampleCommand;
@@ -62,7 +63,7 @@ public class RobotContainer extends CommandOpMode
 
    private MecanumDrive m_drive;
 
-   private Motor m_extendArmMotor;
+   private MotorEx m_extendArmMotor;
    private Motor m_liftArmMotor;
    private CRServo m_intakeWheelServo;
 
@@ -98,7 +99,7 @@ public class RobotContainer extends CommandOpMode
         this.m_intakePivotSubsystem = new IntakePivotSubsystem(hardwareMap, "intakePivotServo");
         this.m_gyroSubsystem = new GyroSubsystem(this.m_imu);
 
-        this.m_pivotIntakeCommand = new PivotIntakeCommand(this.m_intakePivotSubsystem);
+        this.m_intakePivotCommand = new IntakePivotCommand(this.m_intakePivotSubsystem);
         this.m_resetGyroCommand = new ResetGyroCommand(this.m_gyroSubsystem);
         this.m_drive = new MecanumDrive
         (
@@ -107,9 +108,9 @@ public class RobotContainer extends CommandOpMode
             new Motor(hardwareMap, "backLeft", Motor.GoBILDA.RPM_312),
             new Motor(hardwareMap, "backRight", Motor.GoBILDA.RPM_312)
         );
-        this.m_driveSubsystem = new DriveSubsystem(this.m_drive);
+        this.m_driveFieldOrientedSubsystem = new DriveFieldOrientedSubsystem(this.m_drive);
 
-        this.m_extendArmMotor = new Motor(hardwareMap, "extendArmMotor", Motor.GoBILDA.RPM_312);
+        this.m_extendArmMotor = new MotorEx(hardwareMap, "extendArmMotor", Motor.GoBILDA.RPM_312);
         this.m_liftArmMotor = new Motor(hardwareMap, "liftArmMotor", Motor.GoBILDA.RPM_117);
 
         this.m_extendArmSubsystem = new ExtendArmSubsystem(this.m_extendArmMotor);
@@ -120,21 +121,28 @@ public class RobotContainer extends CommandOpMode
         this.m_gyroResetButton = (new GamepadButton(this.m_driver1, GamepadKeys.Button.START))
                 .whenPressed(this.m_resetGyroCommand);
 
- //       this.m_driveFieldOrientedCommand = new DriveFieldOrientedCommand(this.m_driveSubsystem, () -> this.m_driver1.getLeftX(),
+ //       this.m_driveFieldOrientedCommand = new DriveFieldOrientedCommand(this.m_driveFieldOrientedSubsystem, () -> this.m_driver1.getLeftX(),
         //       () -> this.m_driver1.getLeftY(), () -> this.m_driver1)
 
-        this.m_driveFieldOrientedCommand = new DriveFieldOrientedCommand(this.m_driveSubsystem, () -> this.m_driver1.getLeftX(),
+        this.m_driveFieldOrientedCommand = new DriveFieldOrientedCommand(this.m_driveFieldOrientedSubsystem, () -> this.m_driver1.getLeftX(),
                 () -> this.m_driver1.getLeftY(), () -> this.m_driver1.getRightX(),  () -> this.m_imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
 
-        this.m_extendArmCommand = new ExtendArmCommand(this.m_extendArmSubsystem, () -> this.m_driver2.getLeftY());
-        this.m_liftArmCommand = new LiftArmCommand(this.m_liftArmSubsystem, () -> this.m_driver2.getRightY());
+//        this.m_extendArmCommand = new ExtendArmCommand(this.m_extendArmSubsystem, () -> this.m_driver2.getLeftY());
+//        this.m_liftArmCommand = new LiftArmCommand(this.m_liftArmSubsystem, () -> this.m_driver2.getRightY());
 
-        this.m_armPositionAscentCommand = new ArmPositionAscentCommand(this.m_armPositionAscentCommand, () -> this.m_driver2.getGamepadButton(GamepadKeys.Button.Y));
+        this.m_armPositionCloseSampleCommand = new ArmPositionCloseSampleCommand(m_liftArmSubsystem, 350, m_extendArmSubsystem, 0);
+        this.m_armPositionFarSampleCommand = new ArmPositionFarSampleCommand(m_liftArmSubsystem, 496, m_extendArmSubsystem, -2259);
+        this.m_armPositionLowBasketCommand = new ArmPositionLowBasketCommand(m_liftArmSubsystem, 1395, m_extendArmSubsystem, -1047);
+        this.m_armPositionHighBasketCommand = new ArmPositionHighBasketCommand(m_liftArmSubsystem, 1917, m_extendArmSubsystem, -2363);
+        this.m_armPositionLowChamberCommand = new ArmPositionLowChamberCommand(m_liftArmSubsystem, 830, m_extendArmSubsystem, 0);
+        this.m_armPositionHighChamberCommand = new ArmPositionHighChamberCommand(m_liftArmSubsystem,1596, m_extendArmSubsystem, -680);
+        this.m_armPositionAscentCommand = new ArmPositionAscentCommand(m_liftArmSubsystem, 1249, m_extendArmSubsystem, -680);
+
 
         this.m_rightBumper = (new GamepadButton(this.m_driver2, GamepadKeys.Button.RIGHT_BUMPER))
-                .whenPressed(this.m_pivotIntakeCommand);
+                .whenPressed(this.m_intakePivotCommand);
 
-        this.m_spinIntakeCommand = new SpinIntakeCommand(this.m_intakeWheelSubsystem, () -> this.m_driver2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER),
+        this.m_intakeWheelCommand = new IntakeWheelCommand(this.m_intakeWheelSubsystem, () -> this.m_driver2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER),
                 () -> this.m_driver2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
         this.m_leftBumper = (new GamepadButton(this.m_driver2, GamepadKeys.Button.LEFT_BUMPER))
@@ -159,21 +167,38 @@ public class RobotContainer extends CommandOpMode
                 .whenPressed(this.m_armPositionLowChamberCommand);
 
 
-        System.out.println("Running!");
 
-        register(this.m_driveSubsystem);
-        register(this.m_extendArmSubsystem);
-        register(this.m_liftArmSubsystem);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        register(this.m_driveFieldOrientedSubsystem);
+//        register(this.m_extendArmSubsystem);
+//        register(this.m_liftArmSubsystem);
         register(this.m_intakeWheelSubsystem);
 
 
-        this.m_driveSubsystem.setDefaultCommand(this.m_driveFieldOrientedCommand);
+        this.m_driveFieldOrientedSubsystem.setDefaultCommand(this.m_driveFieldOrientedCommand);
 //
-        this.m_extendArmSubsystem.setDefaultCommand(this.m_extendArmCommand);
-        this.m_liftArmSubsystem.setDefaultCommand(this.m_liftArmCommand);
+//        this.m_extendArmSubsystem.setDefaultCommand(this.m_extendArmCommand);
+//        this.m_liftArmSubsystem.setDefaultCommand(this.m_liftArmCommand);
 
-        this.m_intakeWheelSubsystem.setDefaultCommand(this.m_spinIntakeCommand);
+        this.m_intakeWheelSubsystem.setDefaultCommand(this.m_intakeWheelCommand);
 
+//      @Over
+//
 //        while(1 == 1)
 //        {
 //            telemetry.addData("Lift Arm", this.m_liftArmMotor.getCurrentPosition());
