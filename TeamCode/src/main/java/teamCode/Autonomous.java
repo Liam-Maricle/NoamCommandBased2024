@@ -71,7 +71,7 @@ public class Autonomous extends CommandOpMode
     @Override
     public void run()
     {
-        driveRobot(1000, 1000, 1000, 1000);
+        driveRobot(1025, -1025, 1025, -1025);
         stop();
     }
 

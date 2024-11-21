@@ -42,7 +42,6 @@ public class ArmPositionCloseSampleCommand extends CommandBase
     @Override
     public void end(boolean interrupted)
     {
-
     }
 
     @Override

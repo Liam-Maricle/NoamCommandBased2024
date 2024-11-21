@@ -4,6 +4,8 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -36,7 +38,6 @@ import teamCode.subsystems.GyroSubsystem;
 import teamCode.subsystems.IntakePivotSubsystem;
 import teamCode.subsystems.IntakeWheelSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
-
 
 @TeleOp(name = "Sting-Ray")
 public class RobotContainer extends CommandOpMode
@@ -96,6 +97,9 @@ public class RobotContainer extends CommandOpMode
    private ArmPositionLowBasketCommand m_armPositionLowBasketCommand;
    private ArmPositionLowChamberCommand m_armPositionLowChamberCommand;
 
+   /* PID */
+    private PIDController m_pIDController;
+
 
     @Override
     public void initialize()
@@ -135,6 +139,11 @@ public class RobotContainer extends CommandOpMode
         this.m_extendArmMotor = hardwareMap.get(MotorEx.class, "extendArmMotor");
         this.m_liftArmMotor = hardwareMap.get(MotorEx.class, "liftArmMotor");
 
+        /* PID */
+
+        this.m_pIDController = new PIDController(0, 0, 0);
+        this.m_pIDController.setPID(0, 0, 0);
+
 
         /* Subsystems */
 
@@ -144,8 +153,9 @@ public class RobotContainer extends CommandOpMode
 
         this.m_driveFieldOrientedSubsystem = new DriveFieldOrientedSubsystem(this.m_drive);
 
+
         this.m_extendArmSubsystem = new ExtendArmSubsystem(this.m_extendArmMotor);
-        this.m_liftArmSubsystem = new LiftArmSubsystem(this.m_liftArmMotor);
+        this.m_liftArmSubsystem = new LiftArmSubsystem(this.m_liftArmMotor, () -> this.m_pIDController.calculate(this.m_liftArmMotor.getCurrentPosition()));
 
         register(this.m_driveFieldOrientedSubsystem);
         register(this.m_extendArmSubsystem);
