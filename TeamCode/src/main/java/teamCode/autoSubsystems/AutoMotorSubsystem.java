@@ -23,7 +23,7 @@ public class AutoMotorSubsystem extends SubsystemBase
 
     public AutoMotorSubsystem (DcMotor dcMotor)
     {
-        this.m_driveMotor = dcMotor;
+//        this.m_driveMotor = dcMotor;
     }
 
     public void runMotor(int pos)

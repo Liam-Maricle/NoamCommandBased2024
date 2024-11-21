@@ -10,7 +10,7 @@ public class LiftArmCommand extends CommandBase
 {
     private LiftArmSubsystem m_liftArmSubsystem;
     public DoubleSupplier m_rightY;
-
+    public boolean m_x;
     public LiftArmCommand(LiftArmSubsystem liftArmSubsystem, DoubleSupplier rightY)
     {
         this.m_liftArmSubsystem = liftArmSubsystem;

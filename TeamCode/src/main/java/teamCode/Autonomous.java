@@ -59,7 +59,6 @@ public class Autonomous extends CommandOpMode
         this.m_intakeWheelServo = new CRServo(hardwareMap, "intakeWheelServo");
         this.m_intakePivotSubsystem = new IntakePivotSubsystem(hardwareMap, "intakePivotServo");
 
-        System.out.println("Yay!");
         m_fLPos = 0;
         m_fRPos = 0;
         m_bLPos = 0;
@@ -73,6 +72,7 @@ public class Autonomous extends CommandOpMode
     public void run()
     {
         driveRobot(1000, 1000, 1000, 1000);
+        stop();
     }
 
     public void driveRobot(int fL, int fR, int bL, int bR)
