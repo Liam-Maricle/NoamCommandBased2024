@@ -1,30 +1,29 @@
 package teamCode.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class ExtendArmSubsystem extends SubsystemBase
 {
-    private final MotorEx m_extendArmMotor;
-
-    public ExtendArmSubsystem(MotorEx extendArmMotor)
+    private final DcMotor m_extendArmMotor;
+    public int m_eArmPos;
+    public ExtendArmSubsystem(DcMotor extendArmMotor)
     {
         this.m_extendArmMotor = extendArmMotor;
-        this.m_extendArmMotor.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
+        this.m_extendArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.m_extendArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.m_extendArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        m_eArmPos = 0;
     }
 
     public void extendArm(double power)
     {
-//        this.m_extendArmMotor.setRunMode(Motor.RunMode.PositionControl);
-        this.m_extendArmMotor.set(power);
+        this.m_extendArmMotor.setPower(power);
     }
 
-    public void extendArm(int extend)
+     public void extendArm(int extend)
     {
-        m_extendArmMotor.setRunMode(MotorEx.RunMode.PositionControl);
-
+        m_extendArmMotor.setTargetPosition(0);
+        this.m_extendArmMotor.setPower(0.5);
     }
 }

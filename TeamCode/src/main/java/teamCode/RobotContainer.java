@@ -11,10 +11,11 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -68,8 +69,8 @@ public class RobotContainer extends CommandOpMode
 
 
    /* Motors */
-   private MotorEx m_extendArmMotor;
-   private MotorEx m_liftArmMotor;
+   private DcMotor m_extendArmMotor;
+   private DcMotor m_liftArmMotor;
    private CRServo m_intakeWheelServo;
 
 
@@ -136,13 +137,15 @@ public class RobotContainer extends CommandOpMode
         /* Motors */
 
         this.m_intakeWheelServo = new CRServo(hardwareMap, "intakeWheelServo");
-        this.m_extendArmMotor = hardwareMap.get(MotorEx.class, "extendArmMotor");
-        this.m_liftArmMotor = hardwareMap.get(MotorEx.class, "liftArmMotor");
+//        this.m_extendArmMotor = hardwareMap.get(MotorEx.class, "extendArmMotor");
+        this.m_extendArmMotor = hardwareMap.get (DcMotor.class, ("extendArmMotor"));
+//        this.m_liftArmMotor = hardwareMap.get(MotorEx.class, "liftArmMotor");
+        this.m_liftArmMotor = hardwareMap.get(DcMotor.class, ("liftArmMotor"));
 
         /* PID */
 
         this.m_pIDController = new PIDController(0, 0, 0);
-        this.m_pIDController.setPID(0, 0, 0);
+        this.m_pIDController.setPID(0.0, 0.0, 0.0);
 
 
         /* Subsystems */
@@ -155,11 +158,11 @@ public class RobotContainer extends CommandOpMode
 
 
         this.m_extendArmSubsystem = new ExtendArmSubsystem(this.m_extendArmMotor);
-        this.m_liftArmSubsystem = new LiftArmSubsystem(this.m_liftArmMotor, () -> this.m_pIDController.calculate(this.m_liftArmMotor.getCurrentPosition()));
+        this.m_liftArmSubsystem = new LiftArmSubsystem(this.m_liftArmMotor)/*() -> this.m_pIDController.calculate(this.m_liftArmMotor.getCurrentPosition()))*/;
 
         register(this.m_driveFieldOrientedSubsystem);
-        register(this.m_extendArmSubsystem);
-        register(this.m_liftArmSubsystem);
+//        register(this.m_extendArmSubsystem);
+//        register(this.m_liftArmSubsystem);
         register(this.m_intakeWheelSubsystem);
 
 
@@ -173,11 +176,11 @@ public class RobotContainer extends CommandOpMode
                 () -> this.m_driver2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
         this.m_intakeWheelSubsystem.setDefaultCommand(this.m_intakeWheelCommand);
 
-        this.m_extendArmCommand = new ExtendArmCommand(this.m_extendArmSubsystem, () -> this.m_driver2.getLeftY());
-        this.m_extendArmSubsystem.setDefaultCommand(this.m_extendArmCommand);
+//        this.m_extendArmCommand = new ExtendArmCommand(this.m_extendArmSubsystem, () -> this.m_driver2.getLeftY());
+//        this.m_extendArmSubsystem.setDefaultCommand(this.m_extendArmCommand);
 
-        this.m_liftArmCommand = new LiftArmCommand(this.m_liftArmSubsystem, () -> this.m_driver2.getRightY());
-        this.m_liftArmSubsystem.setDefaultCommand(this.m_liftArmCommand);
+//        this.m_liftArmCommand = new LiftArmCommand(this.m_liftArmSubsystem, () -> this.m_driver2.getRightY());
+//        this.m_liftArmSubsystem.setDefaultCommand(this.m_liftArmCommand);
 
 
         /* Event Commands */
@@ -193,7 +196,7 @@ public class RobotContainer extends CommandOpMode
         this.m_leftBumper = (new GamepadButton(this.m_driver2, GamepadKeys.Button.LEFT_BUMPER))
                 .whenPressed(this.m_armPositionAscentCommand);
 
-        this.m_armPositionCloseSampleCommand = new ArmPositionCloseSampleCommand(m_liftArmSubsystem, 350, m_extendArmSubsystem, 0);
+        this.m_armPositionCloseSampleCommand = new ArmPositionCloseSampleCommand(m_liftArmSubsystem, m_extendArmSubsystem);
         this.m_x = (new GamepadButton(this.m_driver2, GamepadKeys.Button.X))
                 .whenPressed(this.m_armPositionCloseSampleCommand);
 
