@@ -6,14 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class LiftArmSubsystem extends SubsystemBase
 {
     private final DcMotor m_liftArmMotor;
-    public int m_lArmPos;
+
     public LiftArmSubsystem(DcMotor liftArmMotor)
     {
         this.m_liftArmMotor = liftArmMotor;
         this.m_liftArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-       // this.m_liftArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        this.m_liftArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.m_liftArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        m_lArmPos = 0;
     }
 
     public void liftArm(int lift)

@@ -32,42 +32,42 @@ public class Autonomous extends CommandOpMode
 
     public void initialize()
     {
-        this.m_fLMotor = hardwareMap.get(DcMotor.class, "frontLeft");
-        this.m_fRMotor = hardwareMap.get(DcMotor.class, "frontRight");
-        this.m_bLMotor = hardwareMap.get(DcMotor.class, "backLeft");
-        this.m_bRMotor = hardwareMap.get(DcMotor.class, "backRight");
-
-        this.m_fLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.m_fRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.m_bLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.m_bRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        this.m_fLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        this.m_fRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        this.m_bLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        this.m_bRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        this.m_fLMotor.setDirection(DcMotor.Direction.REVERSE);
-        this.m_bLMotor.setDirection(DcMotor.Direction.REVERSE);
-
-        this.m_fLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.m_fRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.m_bLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.m_bRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        /*  this.m_slideArmMotor = new Motor(hardwareMap, "slideArmMotor", Motor.GoBILDA.RPM_312);
-        this.m_liftArmMotor = new Motor(hardwareMap, "liftArmMotor", Motor.GoBILDA.RPM_117);*/
-
-        this.m_intakeWheelServo = new CRServo(hardwareMap, "intakeWheelServo");
-        this.m_intakePivotSubsystem = new IntakePivotSubsystem(hardwareMap, "intakePivotServo");
-        this.m_autoDriveSubsystem = new AutoDriveSubsystem();
-        waitForStart();
+//        this.m_fLMotor = hardwareMap.get(DcMotor.class, "frontLeft");
+//        this.m_fRMotor = hardwareMap.get(DcMotor.class, "frontRight");
+//        this.m_bLMotor = hardwareMap.get(DcMotor.class, "backLeft");
+//        this.m_bRMotor = hardwareMap.get(DcMotor.class, "backRight");
+//
+//        this.m_fLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        this.m_fRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        this.m_bLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        this.m_bRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+////        this.m_fLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+////        this.m_fRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+////        this.m_bLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+////        this.m_bRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        this.m_fLMotor.setDirection(DcMotor.Direction.REVERSE);
+//        this.m_bLMotor.setDirection(DcMotor.Direction.REVERSE);
+//
+//        this.m_fLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        this.m_fRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        this.m_bLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        this.m_bRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        /*  this.m_slideArmMotor = new Motor(hardwareMap, "slideArmMotor", Motor.GoBILDA.RPM_312);
+//        this.m_liftArmMotor = new Motor(hardwareMap, "liftArmMotor", Motor.GoBILDA.RPM_117);*/
+//
+//        this.m_intakeWheelServo = new CRServo(hardwareMap, "intakeWheelServo");
+//        this.m_intakePivotSubsystem = new IntakePivotSubsystem(hardwareMap, "intakePivotServo");
+//        this.m_autoDriveSubsystem = new AutoDriveSubsystem();
+//        waitForStart();
     }
-
-    @Override
-    public void run()
-    {
-        this.m_autoDriveSubsystem.driveRobot(1025, -1025, 1025, -1025);
-        stop();
-    }
+//
+//    @Override
+//    public void run()
+//    {
+//        this.m_autoDriveSubsystem.driveRobot(1025, -1025, 1025, -1025);
+//        stop();
+//    }
 }

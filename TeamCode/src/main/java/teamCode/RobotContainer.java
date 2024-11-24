@@ -138,8 +138,8 @@ public class RobotContainer extends CommandOpMode
 
         /* Motors */
 
-        this.m_slideArmMotor = hardwareMap.get (DcMotor.class, ("slideArmMotor"));
-        this.m_liftArmMotor = hardwareMap.get(DcMotor.class, ("liftArmMotor"));
+        this.m_slideArmMotor = hardwareMap.get(DcMotor.class, "slideArmMotor");
+        this.m_liftArmMotor = hardwareMap.get(DcMotor.class, "liftArmMotor");
         this.m_intakeWheelServo = new CRServo(hardwareMap, "intakeWheelServo");
 
         /* PID */
@@ -181,6 +181,7 @@ public class RobotContainer extends CommandOpMode
         this.m_armFudgeFactorDownCommand = new ArmFudgeFactorDownCommand(m_liftArmSubsystem);
         this.m_dpadLeft = (new GamepadButton(this.m_driver2, GamepadKeys.Button.DPAD_LEFT))
                 .whenPressed(this.m_armFudgeFactorDownCommand);
+
 
         this.m_armPositionAscentCommand = new ArmPositionAscentCommand(m_liftArmSubsystem, m_slideArmSubsystem);
         this.m_leftBumper = (new GamepadButton(this.m_driver1, GamepadKeys.Button.LEFT_BUMPER))
