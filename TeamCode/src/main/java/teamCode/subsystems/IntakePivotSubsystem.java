@@ -10,7 +10,7 @@ public class IntakePivotSubsystem extends SubsystemBase
 
     public IntakePivotSubsystem(HardwareMap hMap, String name )
     {
-        this.m_intakePivotServo = hMap.get(Servo.class, name);      //this.m_intakePivotServo = hMap.get(CRServo.class, name);
+        this.m_intakePivotServo = hMap.get(Servo.class, name);
     }
 
     // Pivots position of the intake.

@@ -7,7 +7,6 @@ import teamCode.subsystems.IntakePivotSubsystem;
 public class IntakePivotCommand extends CommandBase
 {
     private final IntakePivotSubsystem m_intakePivotSubsystem;
-    //    private final IntakePivotSubsystem m_intakePivotSubsystem;
     private int position;
 
     public IntakePivotCommand(IntakePivotSubsystem pivotSubsystem)
@@ -20,7 +19,6 @@ public class IntakePivotCommand extends CommandBase
     @Override
     public void initialize()
     {
-
     }
 
     @Override
@@ -42,7 +40,6 @@ public class IntakePivotCommand extends CommandBase
     @Override
     public void end(boolean inturrupted)
     {
-
     }
 
     @Override

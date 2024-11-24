@@ -2,21 +2,21 @@ package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import java.util.function.DoubleSupplier;
-
 import teamCode.subsystems.LiftArmSubsystem;
 
-public class LiftArmCommand extends CommandBase
+public class ArmFudgeFactorDownCommand extends CommandBase
 {
     private LiftArmSubsystem m_liftArmSubsystem;
-    public DoubleSupplier m_rightY;
 
-    public LiftArmCommand(LiftArmSubsystem liftArmSubsystem, DoubleSupplier rightY)
+    public int m_lift;
+
+    public ArmFudgeFactorDownCommand(LiftArmSubsystem liftArmSubsystem)
     {
         this.m_liftArmSubsystem = liftArmSubsystem;
+
         addRequirements(m_liftArmSubsystem);
 
-        this.m_rightY = rightY;
+        this.m_lift = -20;
     }
 
     @Override
@@ -27,6 +27,17 @@ public class LiftArmCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_liftArmSubsystem.liftArm(m_rightY.getAsDouble() * 0.5);
+        this.m_liftArmSubsystem.fudgeFactor(m_lift);
+    }
+
+    @Override
+    public void end(boolean interrupted)
+    {
+    }
+
+    @Override
+    public boolean isFinished()
+    {
+        return true;
     }
 }

@@ -20,25 +20,30 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+import teamCode.commands.ArmFudgeFactorDownCommand;
+import teamCode.commands.ArmFudgeFactorUpCommand;
+import teamCode.commands.DriveFieldOrientedCommand;
+import teamCode.commands.SlideArmCommand;
+import teamCode.commands.LiftArmCommand;
+import teamCode.commands.ArmPositionHomeCommand;
 import teamCode.commands.ArmPositionAscentCommand;
 import teamCode.commands.ArmPositionCloseSampleCommand;
 import teamCode.commands.ArmPositionFarSampleCommand;
 import teamCode.commands.ArmPositionHighBasketCommand;
 import teamCode.commands.ArmPositionHighChamberCommand;
+import teamCode.commands.ArmPositionHomeCommand;
 import teamCode.commands.ArmPositionLowBasketCommand;
 import teamCode.commands.ArmPositionLowChamberCommand;
-import teamCode.commands.DriveFieldOrientedCommand;
-import teamCode.commands.ExtendArmCommand;
-import teamCode.commands.LiftArmCommand;
 import teamCode.commands.IntakePivotCommand;
-import teamCode.commands.ResetGyroCommand;
 import teamCode.commands.IntakeWheelCommand;
+import teamCode.commands.ResetGyroCommand;
+
 import teamCode.subsystems.DriveFieldOrientedSubsystem;
-import teamCode.subsystems.ExtendArmSubsystem;
-import teamCode.subsystems.GyroSubsystem;
+import teamCode.subsystems.SlideArmSubsystem;
+import teamCode.subsystems.LiftArmSubsystem;
 import teamCode.subsystems.IntakePivotSubsystem;
 import teamCode.subsystems.IntakeWheelSubsystem;
-import teamCode.subsystems.LiftArmSubsystem;
+import teamCode.subsystems.GyroSubsystem;
 
 @TeleOp(name = "Sting-Ray")
 public class RobotContainer extends CommandOpMode
@@ -56,40 +61,39 @@ public class RobotContainer extends CommandOpMode
    private GamepadEx m_driver1;
    private GamepadEx m_driver2;
 
+   private Button m_leftBumper;
    private Button m_rightBumper;
 
-   private Button m_y;
    private Button m_a;
-   private Button m_x;
    private Button m_b;
+   private Button m_x;
+   private Button m_y;
    private Button m_dpadTop;
    private Button m_dpadBottom;
-   private Button m_leftBumper;
+   private Button m_dpadLeft;
+   private Button m_dpadRight;
    private Button m_gyroResetButton;
 
 
    /* Motors */
-   private DcMotor m_extendArmMotor;
+   private DcMotor m_slideArmMotor;
    private DcMotor m_liftArmMotor;
    private CRServo m_intakeWheelServo;
 
 
     /* Subsystems */
    private DriveFieldOrientedSubsystem m_driveFieldOrientedSubsystem;
-   private ExtendArmSubsystem m_extendArmSubsystem;
+   private SlideArmSubsystem m_slideArmSubsystem;
    private LiftArmSubsystem m_liftArmSubsystem;
-   private IntakeWheelSubsystem m_intakeWheelSubsystem;
    private IntakePivotSubsystem m_intakePivotSubsystem;
+   private IntakeWheelSubsystem m_intakeWheelSubsystem;
    private GyroSubsystem m_gyroSubsystem;
 
 
    /* Commands */
    private DriveFieldOrientedCommand m_driveFieldOrientedCommand;
-   private ExtendArmCommand m_extendArmCommand;
-   private LiftArmCommand m_liftArmCommand;
-   private IntakePivotCommand m_intakePivotCommand;
-   private IntakeWheelCommand m_intakeWheelCommand;
-   private ResetGyroCommand m_resetGyroCommand;
+   private ArmFudgeFactorUpCommand m_armFudgeFactorUpCommand;
+   private ArmFudgeFactorDownCommand m_armFudgeFactorDownCommand;
    private ArmPositionAscentCommand m_armPositionAscentCommand;
    private ArmPositionCloseSampleCommand m_armPositionCloseSampleCommand;
    private ArmPositionFarSampleCommand m_armPositionFarSampleCommand;
@@ -97,6 +101,11 @@ public class RobotContainer extends CommandOpMode
    private ArmPositionHighChamberCommand m_armPositionHighChamberCommand;
    private ArmPositionLowBasketCommand m_armPositionLowBasketCommand;
    private ArmPositionLowChamberCommand m_armPositionLowChamberCommand;
+   private ArmPositionHomeCommand m_armPositionHomeCommand;
+   private IntakePivotCommand m_intakePivotCommand;
+   private IntakeWheelCommand m_intakeWheelCommand;
+   private ResetGyroCommand m_resetGyroCommand;
+
 
    /* PID */
     private PIDController m_pIDController;
@@ -136,11 +145,9 @@ public class RobotContainer extends CommandOpMode
 
         /* Motors */
 
-        this.m_intakeWheelServo = new CRServo(hardwareMap, "intakeWheelServo");
-//        this.m_extendArmMotor = hardwareMap.get(MotorEx.class, "extendArmMotor");
-        this.m_extendArmMotor = hardwareMap.get (DcMotor.class, ("extendArmMotor"));
-//        this.m_liftArmMotor = hardwareMap.get(MotorEx.class, "liftArmMotor");
+        this.m_slideArmMotor = hardwareMap.get (DcMotor.class, ("slideArmMotor"));
         this.m_liftArmMotor = hardwareMap.get(DcMotor.class, ("liftArmMotor"));
+        this.m_intakeWheelServo = new CRServo(hardwareMap, "intakeWheelServo");
 
         /* PID */
 
@@ -150,19 +157,14 @@ public class RobotContainer extends CommandOpMode
 
         /* Subsystems */
 
-        this.m_intakeWheelSubsystem = new IntakeWheelSubsystem(this.m_intakeWheelServo);
+        this.m_driveFieldOrientedSubsystem = new DriveFieldOrientedSubsystem(this.m_drive);
+        this.m_slideArmSubsystem = new SlideArmSubsystem(this.m_slideArmMotor);
+        this.m_liftArmSubsystem = new LiftArmSubsystem(this.m_liftArmMotor)/*() -> this.m_pIDController.calculate(this.m_liftArmMotor.getCurrentPosition()))*/;
         this.m_intakePivotSubsystem = new IntakePivotSubsystem(hardwareMap, "intakePivotServo");
+        this.m_intakeWheelSubsystem = new IntakeWheelSubsystem(this.m_intakeWheelServo);
         this.m_gyroSubsystem = new GyroSubsystem(this.m_imu);
 
-        this.m_driveFieldOrientedSubsystem = new DriveFieldOrientedSubsystem(this.m_drive);
-
-
-        this.m_extendArmSubsystem = new ExtendArmSubsystem(this.m_extendArmMotor);
-        this.m_liftArmSubsystem = new LiftArmSubsystem(this.m_liftArmMotor)/*() -> this.m_pIDController.calculate(this.m_liftArmMotor.getCurrentPosition()))*/;
-
         register(this.m_driveFieldOrientedSubsystem);
-//        register(this.m_extendArmSubsystem);
-//        register(this.m_liftArmSubsystem);
         register(this.m_intakeWheelSubsystem);
 
 
@@ -176,48 +178,55 @@ public class RobotContainer extends CommandOpMode
                 () -> this.m_driver2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
         this.m_intakeWheelSubsystem.setDefaultCommand(this.m_intakeWheelCommand);
 
-//        this.m_extendArmCommand = new ExtendArmCommand(this.m_extendArmSubsystem, () -> this.m_driver2.getLeftY());
-//        this.m_extendArmSubsystem.setDefaultCommand(this.m_extendArmCommand);
-
-//        this.m_liftArmCommand = new LiftArmCommand(this.m_liftArmSubsystem, () -> this.m_driver2.getRightY());
-//        this.m_liftArmSubsystem.setDefaultCommand(this.m_liftArmCommand);
-
 
         /* Event Commands */
-        this.m_resetGyroCommand = new ResetGyroCommand(this.m_gyroSubsystem);
-        this.m_gyroResetButton = (new GamepadButton(this.m_driver1, GamepadKeys.Button.START))
-                .whenPressed(this.m_resetGyroCommand);
+
+        this.m_armFudgeFactorUpCommand = new ArmFudgeFactorUpCommand(m_liftArmSubsystem);
+        this.m_dpadRight = (new GamepadButton(this.m_driver2, GamepadKeys.Button.DPAD_RIGHT))
+                .whenPressed(this.m_armFudgeFactorUpCommand);
+
+        this.m_armFudgeFactorDownCommand = new ArmFudgeFactorDownCommand(m_liftArmSubsystem);
+        this.m_dpadLeft = (new GamepadButton(this.m_driver2, GamepadKeys.Button.DPAD_LEFT))
+                .whenPressed(this.m_armFudgeFactorDownCommand);
+
+        this.m_armPositionAscentCommand = new ArmPositionAscentCommand(m_liftArmSubsystem, m_slideArmSubsystem);
+        this.m_leftBumper = (new GamepadButton(this.m_driver1, GamepadKeys.Button.LEFT_BUMPER))
+                .whenPressed(this.m_armPositionAscentCommand);
+
+        this.m_armPositionCloseSampleCommand = new ArmPositionCloseSampleCommand(m_liftArmSubsystem, m_slideArmSubsystem);
+        this.m_x = (new GamepadButton(this.m_driver2, GamepadKeys.Button.X))
+                .whenPressed(this.m_armPositionCloseSampleCommand);
+
+        this.m_armPositionFarSampleCommand = new ArmPositionFarSampleCommand(m_liftArmSubsystem, m_slideArmSubsystem);
+        this.m_b = (new GamepadButton(this.m_driver2, GamepadKeys.Button.B))
+                .whenPressed(this.m_armPositionFarSampleCommand);
+
+        this.m_armPositionHighBasketCommand = new ArmPositionHighBasketCommand(m_liftArmSubsystem, m_slideArmSubsystem);
+        this.m_y = (new GamepadButton(this.m_driver2, GamepadKeys.Button.Y))
+                .whenPressed(this.m_armPositionHighBasketCommand);
+
+        this.m_armPositionHighChamberCommand = new ArmPositionHighChamberCommand(m_liftArmSubsystem, m_slideArmSubsystem);
+        this.m_dpadTop = (new GamepadButton(this.m_driver2, GamepadKeys.Button.DPAD_UP))
+                .whenPressed(this.m_armPositionHighChamberCommand);
+
+        this.m_armPositionHomeCommand = new ArmPositionHomeCommand(m_liftArmSubsystem, m_slideArmSubsystem);
+        this.m_leftBumper = (new GamepadButton(this.m_driver2, GamepadKeys.Button.LEFT_BUMPER))
+                .whenPressed(this.m_armPositionHomeCommand);
+
+        this.m_armPositionLowBasketCommand = new ArmPositionLowBasketCommand(m_liftArmSubsystem, m_slideArmSubsystem);
+        this.m_a = (new GamepadButton(this.m_driver2, GamepadKeys.Button.A))
+                .whenPressed(this.m_armPositionLowBasketCommand);
+
+        this.m_armPositionLowChamberCommand = new ArmPositionLowChamberCommand(m_liftArmSubsystem, m_slideArmSubsystem);
+        this.m_dpadBottom = (new GamepadButton(this.m_driver2, GamepadKeys.Button.DPAD_DOWN))
+                .whenPressed(this.m_armPositionLowChamberCommand);
 
         this.m_intakePivotCommand = new IntakePivotCommand(this.m_intakePivotSubsystem);
         this.m_rightBumper = (new GamepadButton(this.m_driver2, GamepadKeys.Button.RIGHT_BUMPER))
                 .whenPressed(this.m_intakePivotCommand);
 
-        this.m_armPositionAscentCommand = new ArmPositionAscentCommand(m_liftArmSubsystem, 1249, m_extendArmSubsystem, -680);
-        this.m_leftBumper = (new GamepadButton(this.m_driver2, GamepadKeys.Button.LEFT_BUMPER))
-                .whenPressed(this.m_armPositionAscentCommand);
-
-        this.m_armPositionCloseSampleCommand = new ArmPositionCloseSampleCommand(m_liftArmSubsystem, m_extendArmSubsystem);
-        this.m_x = (new GamepadButton(this.m_driver2, GamepadKeys.Button.X))
-                .whenPressed(this.m_armPositionCloseSampleCommand);
-
-        this.m_armPositionFarSampleCommand = new ArmPositionFarSampleCommand(m_liftArmSubsystem, 496, m_extendArmSubsystem, -2259);
-        this.m_b = (new GamepadButton(this.m_driver2, GamepadKeys.Button.B))
-                .whenPressed(this.m_armPositionFarSampleCommand);
-
-        this.m_armPositionHighBasketCommand = new ArmPositionHighBasketCommand(m_liftArmSubsystem, 1917, m_extendArmSubsystem, -2363);
-        this.m_y = (new GamepadButton(this.m_driver2, GamepadKeys.Button.Y))
-                .whenPressed(this.m_armPositionHighBasketCommand);
-
-        this.m_armPositionHighChamberCommand = new ArmPositionHighChamberCommand(m_liftArmSubsystem,1596, m_extendArmSubsystem, -680);
-        this.m_dpadTop = (new GamepadButton(this.m_driver2, GamepadKeys.Button.DPAD_UP))
-                .whenPressed(this.m_armPositionHighChamberCommand);
-
-        this.m_armPositionLowBasketCommand = new ArmPositionLowBasketCommand(m_liftArmSubsystem, 1395, m_extendArmSubsystem, -1047);
-        this.m_a = (new GamepadButton(this.m_driver2, GamepadKeys.Button.A))
-                .whenPressed(this.m_armPositionLowBasketCommand);
-
-        this.m_armPositionLowChamberCommand = new ArmPositionLowChamberCommand(m_liftArmSubsystem, 830, m_extendArmSubsystem, 0);
-        this.m_dpadBottom = (new GamepadButton(this.m_driver2, GamepadKeys.Button.DPAD_DOWN))
-                .whenPressed(this.m_armPositionLowChamberCommand);
-    }
+        this.m_resetGyroCommand = new ResetGyroCommand(this.m_gyroSubsystem);
+        this.m_gyroResetButton = (new GamepadButton(this.m_driver1, GamepadKeys.Button.START))
+                .whenPressed(this.m_resetGyroCommand);
+        }
 }

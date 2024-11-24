@@ -1,10 +1,6 @@
 package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-import com.qualcomm.robotcore.hardware.IMU;
-
-import java.util.function.DoubleSupplier;
-
 import teamCode.subsystems.GyroSubsystem;
 
 public class ResetGyroCommand extends CommandBase

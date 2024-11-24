@@ -1,28 +1,24 @@
 package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import teamCode.subsystems.LiftArmSubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
 
-public class ArmPositionHighBasketCommand extends CommandBase
+public class ArmFudgeFactorUpCommand extends CommandBase
 {
     private LiftArmSubsystem m_liftArmSubsystem;
-    private SlideArmSubsystem m_slideArmSubsystem;
 
     public int m_lift;
-    public int m_slide;
 
-    public ArmPositionHighBasketCommand(LiftArmSubsystem liftArmSubsystem,
-                                        SlideArmSubsystem slideArmSubsystem)
+    public ArmFudgeFactorUpCommand(LiftArmSubsystem liftArmSubsystem)
     {
         this.m_liftArmSubsystem = liftArmSubsystem;
-        this.m_slideArmSubsystem = slideArmSubsystem;
 
-        addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
+        addRequirements(m_liftArmSubsystem);
 
-        this.m_lift = 1920;
-        this.m_slide = -2360;
+        this.m_lift = 20;
     }
 
     @Override
@@ -33,8 +29,7 @@ public class ArmPositionHighBasketCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_liftArmSubsystem.liftArm(m_lift);
-        this.m_slideArmSubsystem.slideArm(m_slide);
+        this.m_liftArmSubsystem.fudgeFactor(m_lift);
     }
 
     @Override

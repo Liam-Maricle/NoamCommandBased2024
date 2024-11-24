@@ -1,9 +1,6 @@
 package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-
-import java.util.function.DoubleSupplier;
-
 import teamCode.subsystems.IntakeWheelSubsystem;
 
 public class SpinIntakeAutoCommand extends CommandBase
@@ -21,7 +18,6 @@ public class SpinIntakeAutoCommand extends CommandBase
     @Override
     public void initialize()
     {
-
     }
 
     @Override
@@ -32,7 +28,6 @@ public class SpinIntakeAutoCommand extends CommandBase
 
     public void end(boolean interrupt)
     {
-
     }
 
     @Override

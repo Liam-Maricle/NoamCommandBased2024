@@ -1,11 +1,10 @@
 package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-
-import teamCode.subsystems.SlideArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
+import teamCode.subsystems.SlideArmSubsystem;
 
-public class ArmPositionLowChamberCommand extends CommandBase
+public class ArmPositionHomeCommand extends CommandBase
 {
     private LiftArmSubsystem m_liftArmSubsystem;
     private SlideArmSubsystem m_slideArmSubsystem;
@@ -13,15 +12,15 @@ public class ArmPositionLowChamberCommand extends CommandBase
     public int m_lift;
     public int m_slide;
 
-    public ArmPositionLowChamberCommand(LiftArmSubsystem liftArmSubsystem,
-                                        SlideArmSubsystem slideArmSubsystem)
+    public ArmPositionHomeCommand (LiftArmSubsystem liftArmSubsystem,
+                                  SlideArmSubsystem slideArmSubsystem)
     {
         this.m_liftArmSubsystem = liftArmSubsystem;
         this.m_slideArmSubsystem = slideArmSubsystem;
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
 
-        this.m_lift = 830;
+        this.m_lift = 0;
         this.m_slide = 0;
     }
 

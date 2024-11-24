@@ -1,9 +1,7 @@
 package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-
 import java.util.function.DoubleSupplier;
-
 import teamCode.subsystems.DriveFieldOrientedSubsystem;
 
 public class DriveFieldOrientedCommand extends CommandBase
@@ -28,7 +26,6 @@ public class DriveFieldOrientedCommand extends CommandBase
     @Override
     public void initialize()
     {
-
     }
 
     @Override

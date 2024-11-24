@@ -2,46 +2,44 @@ package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import teamCode.subsystems.ExtendArmSubsystem;
+import teamCode.subsystems.SlideArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
 
 public class ArmPositionAscentCommand extends CommandBase
 {
     private LiftArmSubsystem m_liftArmSubsystem;
-    private ExtendArmSubsystem m_extendArmSubsystem;
+    private SlideArmSubsystem m_slideArmSubsystem;
 
     public int m_lift;
-    public int m_extend;
+    public int m_slide;
 
-    public ArmPositionAscentCommand(LiftArmSubsystem liftArmSubsystem, int lift,
-                                    ExtendArmSubsystem extendArmSubsystem, int extend)
+    public ArmPositionAscentCommand(LiftArmSubsystem liftArmSubsystem,
+                                    SlideArmSubsystem slideArmSubsystem)
     {
         this.m_liftArmSubsystem = liftArmSubsystem;
-        this.m_extendArmSubsystem = extendArmSubsystem;
+        this.m_slideArmSubsystem = slideArmSubsystem;
 
-        addRequirements(m_liftArmSubsystem, m_extendArmSubsystem);
+        addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
 
-        this.m_lift = lift;
-        this.m_extend = extend;
+        this.m_lift = 1250;
+        this.m_slide = -560;
     }
 
     @Override
     public void initialize()
     {
-
     }
 
     @Override
     public void execute()
     {
         this.m_liftArmSubsystem.liftArm(m_lift);
-        this.m_extendArmSubsystem.extendArm(m_extend);
+        this.m_slideArmSubsystem.slideArm(m_slide);
     }
 
     @Override
     public void end(boolean interrupted)
     {
-
     }
 
     @Override
