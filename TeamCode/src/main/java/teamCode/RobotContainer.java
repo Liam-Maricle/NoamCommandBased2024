@@ -31,7 +31,9 @@ import teamCode.commands.ArmPositionLowChamberCommand;
 import teamCode.commands.IntakePivotCommand;
 import teamCode.commands.IntakeWheelCommand;
 import teamCode.commands.ResetGyroCommand;
+import teamCode.commands.ResetHomeCommand;
 
+import teamCode.commands.ResetHomeCommand;
 import teamCode.commands.SlideResetCommand;
 import teamCode.subsystems.DriveFieldOrientedSubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
@@ -68,7 +70,8 @@ public class RobotContainer extends CommandOpMode
    private Button m_dpadLeft;
    private Button m_dpadRight;
    private Button m_gyroResetButton;
-
+   private Button m_slideResetButton;
+   private Button m_resetHomeButton;
 
    /* Motors */
    private DcMotor m_slideArmMotor;
@@ -101,6 +104,7 @@ public class RobotContainer extends CommandOpMode
    private IntakeWheelCommand m_intakeWheelCommand;
    private ResetGyroCommand m_resetGyroCommand;
    private SlideResetCommand m_slideResetCommand;
+   private ResetHomeCommand m_resetHomeCommand;
 
 
    /* PID */
@@ -176,6 +180,14 @@ public class RobotContainer extends CommandOpMode
 
 
         /* Event Commands */
+
+        this.m_slideResetCommand = new SlideResetCommand(m_slideArmSubsystem);
+        this.m_slideResetButton = (new GamepadButton(this.m_driver2, GamepadKeys.Button.BACK))
+                .whileHeld(this.m_slideResetCommand);
+
+        this.m_resetHomeCommand = new ResetHomeCommand(this.m_liftArmSubsystem, this.m_slideArmSubsystem);
+        this.m_resetHomeButton = (new GamepadButton(this.m_driver2, GamepadKeys.Button.START))
+                .whenPressed(this.m_resetHomeCommand);
 
         this.m_armFudgeFactorUpCommand = new ArmFudgeFactorUpCommand(m_liftArmSubsystem);
         this.m_dpadRight = (new GamepadButton(this.m_driver2, GamepadKeys.Button.DPAD_RIGHT))

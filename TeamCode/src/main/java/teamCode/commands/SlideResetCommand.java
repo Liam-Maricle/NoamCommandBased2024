@@ -17,7 +17,7 @@ public class SlideResetCommand extends CommandBase
 
         addRequirements(m_slideArmSubsystem);
 
-        this.m_slide = -20;
+        this.m_slide = 100;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class SlideResetCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_slideArmSubsystem.slideArm(m_slide);
+        this.m_slideArmSubsystem.slideReset(m_slide);
     }
 
     @Override
