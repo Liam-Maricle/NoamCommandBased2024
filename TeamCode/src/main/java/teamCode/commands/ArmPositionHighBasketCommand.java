@@ -2,6 +2,7 @@ package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import teamCode.Logic;
 import teamCode.subsystems.LiftArmSubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
 
@@ -21,7 +22,7 @@ public class ArmPositionHighBasketCommand extends CommandBase
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
 
-        this.m_lift = 1920;
+        this.m_lift = 2000;
         this.m_slide = -2360;
     }
 
@@ -34,6 +35,7 @@ public class ArmPositionHighBasketCommand extends CommandBase
     public void execute()
     {
         this.m_liftArmSubsystem.liftArm(m_lift);
+        Logic.WaitClass.wait(() -> this.m_liftArmSubsystem.atTarget(this.m_lift-500));
         this.m_slideArmSubsystem.slideArm(m_slide);
     }
 
@@ -45,6 +47,9 @@ public class ArmPositionHighBasketCommand extends CommandBase
     @Override
     public boolean isFinished()
     {
+//        return Logic.OpModeType.opMode.equals("Sting-Ray Auto")
+//                && this.m_liftArmSubsystem.atTarget(this.m_lift)
+//                && this.m_slideArmSubsystem.atTarget(this.m_slide);
         return true;
     }
 }

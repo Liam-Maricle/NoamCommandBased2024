@@ -21,8 +21,8 @@ public class ArmPositionFarSampleCommand extends CommandBase
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
 
-        this.m_lift = 500;
-        this.m_slide = -2260;
+        this.m_lift = 420;
+        this.m_slide = -1645;
     }
 
     @Override

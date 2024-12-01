@@ -6,13 +6,17 @@ import teamCode.subsystems.IntakePivotSubsystem;
 
 public class IntakePivotCommand extends CommandBase
 {
+    private static final double m_samplePos = 0.5;
+    private static final double m_specimenPos = 0.85;
     private final IntakePivotSubsystem m_intakePivotSubsystem;
-    private int position;
+    private int m_position;
+    private static final int  m_sample = 1;
+    private static final int  m_specimen = 0;
 
     public IntakePivotCommand(IntakePivotSubsystem pivotSubsystem)
     {
         this.m_intakePivotSubsystem = pivotSubsystem;
-        position = 0;
+        m_position = m_specimen;
         addRequirements(this.m_intakePivotSubsystem);
     }
 
@@ -20,25 +24,24 @@ public class IntakePivotCommand extends CommandBase
     public void initialize()
     {
     }
-
     @Override
     public void execute()
     {
-        if (position == 0)
+        if (m_position == m_specimen)
         {
-            this.m_intakePivotSubsystem.pivotIntake(1.1);
-            position = 1;
+            this.m_intakePivotSubsystem.pivotIntake(m_specimenPos);
+            m_position = m_sample;
         }
-        else if (position == 1)
+        else if (m_position == m_sample)
         {
-            this.m_intakePivotSubsystem.pivotIntake(0.55);
-            position = 0;
+            this.m_intakePivotSubsystem.pivotIntake(m_samplePos);
+            m_position = m_specimen;
         }
 
     }
 
     @Override
-    public void end(boolean inturrupted)
+    public void end(boolean interrupted)
     {
     }
 

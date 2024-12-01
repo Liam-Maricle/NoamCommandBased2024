@@ -18,7 +18,17 @@ public class SlideArmSubsystem extends SubsystemBase
      public void slideArm(int slide)
     {
         m_slideArmMotor.setTargetPosition(slide);
-        this.m_slideArmMotor.setPower(0.5);
+        this.m_slideArmMotor.setPower(0.75);
         this.m_slideArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public boolean atTarget(double target)
+    {
+        return this.m_slideArmMotor.getCurrentPosition() <= target+5;
+    }
+
+    public void stop()
+    {
+        this.m_slideArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }

@@ -2,28 +2,22 @@ package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import teamCode.Logic;
 import teamCode.subsystems.LiftArmSubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
 
-public class ArmPositionHomeCommand extends CommandBase
+public class SlideResetCommand extends CommandBase
 {
-    private LiftArmSubsystem m_liftArmSubsystem;
     private SlideArmSubsystem m_slideArmSubsystem;
 
-    public int m_lift;
     public int m_slide;
 
-    public ArmPositionHomeCommand (LiftArmSubsystem liftArmSubsystem,
-                                  SlideArmSubsystem slideArmSubsystem)
+    public SlideResetCommand(SlideArmSubsystem slideArmSubsystem)
     {
         this.m_slideArmSubsystem = slideArmSubsystem;
-        this.m_liftArmSubsystem = liftArmSubsystem;
 
-        addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
+        addRequirements(m_slideArmSubsystem);
 
-        this.m_slide = 0;
-        this.m_lift = 0;
+        this.m_slide = -20;
     }
 
     @Override
@@ -35,8 +29,6 @@ public class ArmPositionHomeCommand extends CommandBase
     public void execute()
     {
         this.m_slideArmSubsystem.slideArm(m_slide);
-        Logic.WaitClass.wait(() -> this.m_slideArmSubsystem.atTarget(this.m_slide));
-        this.m_liftArmSubsystem.liftArm(m_lift);
     }
 
     @Override

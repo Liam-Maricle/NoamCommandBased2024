@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import teamCode.commands.ArmFudgeFactorDownCommand;
@@ -31,6 +32,7 @@ import teamCode.commands.IntakePivotCommand;
 import teamCode.commands.IntakeWheelCommand;
 import teamCode.commands.ResetGyroCommand;
 
+import teamCode.commands.SlideResetCommand;
 import teamCode.subsystems.DriveFieldOrientedSubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
@@ -98,6 +100,7 @@ public class RobotContainer extends CommandOpMode
    private IntakePivotCommand m_intakePivotCommand;
    private IntakeWheelCommand m_intakeWheelCommand;
    private ResetGyroCommand m_resetGyroCommand;
+   private SlideResetCommand m_slideResetCommand;
 
 
    /* PID */
@@ -222,5 +225,12 @@ public class RobotContainer extends CommandOpMode
         this.m_resetGyroCommand = new ResetGyroCommand(this.m_gyroSubsystem);
         this.m_gyroResetButton = (new GamepadButton(this.m_driver1, GamepadKeys.Button.START))
                 .whenPressed(this.m_resetGyroCommand);
-        }
+
+//        for (int i = 1; i>0; i+=0)
+//        {
+//            telemetry.addData("Lift Arm", this.m_liftArmMotor.getCurrentPosition());
+//            telemetry.addData("Slide Arm", this.m_slideArmMotor.getCurrentPosition());
+//            telemetry.update();
+//        }
+    }
 }
