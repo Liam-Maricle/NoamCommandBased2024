@@ -29,6 +29,13 @@ public class LiftArmSubsystem extends SubsystemBase
         this.m_liftArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
+    public void scoreSpecimen(int score)
+    {
+        this.m_liftArmMotor.setTargetPosition(this.m_liftArmMotor.getCurrentPosition() + score);
+        this.m_liftArmMotor.setPower(0.75);
+        this.m_liftArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
     public boolean atTarget(int target)
     {
         return this.m_liftArmMotor.getCurrentPosition() >= target-5 || this.m_liftArmMotor.getCurrentPosition() >= target+5;

@@ -2,6 +2,7 @@ package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import teamCode.Logic;
 import teamCode.subsystems.SlideArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
 
@@ -21,8 +22,8 @@ public class ArmPositionCloseSampleCommand extends CommandBase
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
 
-        this.m_lift = -10;
-        this.m_slide = -590;
+        this.m_lift = 129;
+        this.m_slide = -812;
     }
 
     @Override
@@ -34,6 +35,7 @@ public class ArmPositionCloseSampleCommand extends CommandBase
     public void execute()
     {
         this.m_liftArmSubsystem.liftArm(m_lift);
+        Logic.WaitClass.wait(() -> this.m_liftArmSubsystem.atTarget(this.m_lift-75));
         this.m_slideArmSubsystem.slideArm(m_slide);
     }
 

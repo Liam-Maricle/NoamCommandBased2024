@@ -22,7 +22,7 @@ public class ArmPositionLowBasketCommand extends CommandBase
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
 
         this.m_lift = 1520;
-        this.m_slide = -1050;
+        this.m_slide = -900;
     }
 
     @Override

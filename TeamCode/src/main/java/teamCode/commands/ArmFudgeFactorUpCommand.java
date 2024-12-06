@@ -18,7 +18,7 @@ public class ArmFudgeFactorUpCommand extends CommandBase
 
         addRequirements(m_liftArmSubsystem);
 
-        this.m_lift = 20;
+        this.m_lift = 50;
     }
 
     @Override

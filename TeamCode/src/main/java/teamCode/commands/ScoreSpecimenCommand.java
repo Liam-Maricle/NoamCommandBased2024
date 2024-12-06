@@ -4,19 +4,19 @@ import com.arcrobotics.ftclib.command.CommandBase;
 
 import teamCode.subsystems.LiftArmSubsystem;
 
-public class ArmFudgeFactorDownCommand extends CommandBase
+public class ScoreSpecimenCommand extends CommandBase
 {
     private LiftArmSubsystem m_liftArmSubsystem;
 
     public int m_lift;
 
-    public ArmFudgeFactorDownCommand(LiftArmSubsystem liftArmSubsystem)
+    public ScoreSpecimenCommand(LiftArmSubsystem liftArmSubsystem)
     {
         this.m_liftArmSubsystem = liftArmSubsystem;
 
         addRequirements(m_liftArmSubsystem);
 
-        this.m_lift = -50;
+        this.m_lift = 200;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class ArmFudgeFactorDownCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_liftArmSubsystem.fudgeFactor(m_lift);
+        this.m_liftArmSubsystem.scoreSpecimen(m_lift);
     }
 
     @Override

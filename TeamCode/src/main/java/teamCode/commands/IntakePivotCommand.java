@@ -6,7 +6,7 @@ import teamCode.subsystems.IntakePivotSubsystem;
 
 public class IntakePivotCommand extends CommandBase
 {
-    private static final double m_samplePos = 0.5;
+    private static final double m_samplePos = 0.45;
     private static final double m_specimenPos = 0.85;
     private final IntakePivotSubsystem m_intakePivotSubsystem;
     private int m_position;

@@ -21,12 +21,15 @@ public class IntakeWheelCommand extends CommandBase
     }
 
     @Override
-    public void initialize() {}
+    public void initialize()
+    {
+
+    }
 
     @Override
     public void execute()
     {
         this.m_intakeWheelSubsystem.spinIntake(
-                this.m_rightTriggerValue.getAsDouble() * -1 - this.m_leftTriggerValue.getAsDouble() * -1 );
+                this.m_rightTriggerValue.getAsDouble() * -1 - this.m_leftTriggerValue.getAsDouble() * -0.5);
     }
 }

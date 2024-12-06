@@ -14,15 +14,17 @@ import teamCode.subsystems.SlideArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
 import teamCode.subsystems.IntakePivotSubsystem;
 import teamCode.subsystems.IntakeWheelSubsystem;
+import teamCode.subsystems.AscentArmSubsystem;
 
 import teamCode.commands.ArmPositionHomeCommand;
 import teamCode.commands.ArmPositionCloseSampleCommand;
 import teamCode.commands.ArmPositionHighBasketCommand;
 import teamCode.commands.IntakePivotCommand;
+import teamCode.commands.AscentArmCommand;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Sting-Ray Auto")
-public class Autonomous extends LinearOpMode
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "AutoSample")
+public class AutoSample extends LinearOpMode
 {
     private DcMotor m_fLMotor;
     private DcMotor m_fRMotor;
@@ -32,6 +34,7 @@ public class Autonomous extends LinearOpMode
     private DcMotor m_slideArmMotor;
     private CRServo m_intakeWheelServo;
     private IntakePivotSubsystem m_intakePivotSubsystem;
+    private AscentArmSubsystem m_ascentArmSubsystem;
     private AutoDriveSubsystem m_autoDriveSubsystem;
     private LiftArmSubsystem m_liftArmSubsystem;
     private SlideArmSubsystem m_slideArmSubsystem;
@@ -40,12 +43,13 @@ public class Autonomous extends LinearOpMode
     private ArmPositionHomeCommand m_armPositionHomeCommand;
     private ArmPositionCloseSampleCommand m_armPositionCloseSampleCommand;
     private IntakePivotCommand m_intakePivotCommand;
+    private AscentArmCommand m_ascentArmCommand;
 
 
     @Override
     public void runOpMode()
     {
-        Logic.OpModeType.opMode = "Sting-Ray Auto";
+        Logic.OpModeType.opMode = "AutoSample";
         this.m_fLMotor = hardwareMap.get(DcMotor.class, "frontLeft");
         this.m_fRMotor = hardwareMap.get(DcMotor.class, "frontRight");
         this.m_bLMotor = hardwareMap.get(DcMotor.class, "backLeft");
@@ -72,24 +76,25 @@ public class Autonomous extends LinearOpMode
         this.m_liftArmMotor = hardwareMap.get(DcMotor.class, "liftArmMotor");
         this.m_slideArmMotor = hardwareMap.get(DcMotor.class, "slideArmMotor");
         this.m_intakeWheelServo = new CRServo(hardwareMap, "intakeWheelServo");
+        this.m_intakePivotSubsystem = new IntakePivotSubsystem(hardwareMap, "intakePivotServo");
+        this.m_ascentArmSubsystem = new AscentArmSubsystem(hardwareMap, "ascentArmServo");
 
         this.m_autoDriveSubsystem = new AutoDriveSubsystem(this.m_fLMotor, this.m_fRMotor, this.m_bLMotor, this.m_bRMotor);
         this.m_liftArmSubsystem = new LiftArmSubsystem(this.m_liftArmMotor);
         this.m_slideArmSubsystem = new SlideArmSubsystem(this.m_slideArmMotor);
-        this.m_intakePivotSubsystem = new IntakePivotSubsystem(hardwareMap, "intakePivotServo");
         this.m_intakeWheelSubsystem = new IntakeWheelSubsystem(this.m_intakeWheelServo);
 
         this.m_armPositionHomeCommand = new ArmPositionHomeCommand(this.m_liftArmSubsystem, this.m_slideArmSubsystem);
         this.m_armPositionCloseSampleCommand = new ArmPositionCloseSampleCommand(this.m_liftArmSubsystem, this.m_slideArmSubsystem);
         this.m_armPositionHighBasketCommand = new ArmPositionHighBasketCommand(this.m_liftArmSubsystem, this.m_slideArmSubsystem);
         this.m_intakePivotCommand = new IntakePivotCommand(this.m_intakePivotSubsystem);
+        this.m_ascentArmCommand = new AscentArmCommand(this.m_ascentArmSubsystem);
 
 
         //Initialize
         this.m_armPositionHomeCommand.execute();
         this.m_intakePivotSubsystem.pivotIntake(0.85);
         waitForStart();
-
 
         this.m_autoDriveSubsystem.driveRobot(760, -760, -760, 760);//Strafe right
         this.m_intakePivotSubsystem.pivotIntake(0.5);//Pivot intake
@@ -108,26 +113,26 @@ public class Autonomous extends LinearOpMode
         wait(()-> this.m_autoDriveSubsystem.atTarget(450));
 
         this.m_armPositionHighBasketCommand.execute();
-        wait(()-> this.m_liftArmSubsystem.atTarget(2000) && this.m_slideArmSubsystem.atTarget(-2360));
+        wait(()-> this.m_liftArmSubsystem.atTarget(2070) && this.m_slideArmSubsystem.atTarget(-2220));
 
         this.m_intakeWheelSubsystem.spinIntake(0.5);//Score in high basket
         sleep(1000);
         this.m_intakeWheelSubsystem.spinIntake(0.0);
 
         this.m_autoDriveSubsystem.stop();
-        this.m_autoDriveSubsystem.driveRobot(-360, -360, -360, -360);//Backup
-        wait(()-> this.m_autoDriveSubsystem.atTarget(360));
+        this.m_autoDriveSubsystem.driveRobot(-460, -460, -460, -460);//Backup
+        wait(()-> this.m_autoDriveSubsystem.atTarget(460));
 
         this.m_autoDriveSubsystem.stop();
         this.m_autoDriveSubsystem.driveRobot(512, -512, 512, -512);//45 degree Right turn
         wait(()-> this.m_autoDriveSubsystem.atTarget(512));
 
         this.m_armPositionHomeCommand.execute();
-        wait(()-> this.m_liftArmSubsystem.atTarget(0) && this.m_slideArmSubsystem.atTarget(0));
+        wait(()-> this.m_liftArmSubsystem.atTarget(0) && this.m_slideArmSubsystem.atTarget(-25));
 
         this.m_autoDriveSubsystem.stop();
-        this.m_autoDriveSubsystem.driveRobot(-450, -450, -450, -450);//Back up *was 645
-        wait(()-> this.m_autoDriveSubsystem.atTarget(450));
+        this.m_autoDriveSubsystem.driveRobot(-500, -500, -500, -500);//Back up *was 645
+        wait(()-> this.m_autoDriveSubsystem.atTarget(500));
 
         this.m_autoDriveSubsystem.stop();
         this.m_autoDriveSubsystem.driveRobot(1150, -1150, -1150, 1150);//Strafe right to samples
@@ -142,11 +147,11 @@ public class Autonomous extends LinearOpMode
         this.m_armPositionHomeCommand.execute();
 
         this.m_autoDriveSubsystem.stop();
-        this.m_autoDriveSubsystem.driveRobot(-1250, 1250, 1250, -1250);
-        wait(()-> this.m_autoDriveSubsystem.atTarget(1250));
+        this.m_autoDriveSubsystem.driveRobot(-1150, 1150, 1150, -1150);// Strafe
+        wait(()-> this.m_autoDriveSubsystem.atTarget(1150));
 
         this.m_autoDriveSubsystem.stop();
-        this.m_autoDriveSubsystem.driveRobot(425, 425, 425, 425);
+        this.m_autoDriveSubsystem.driveRobot(425, 425, 425, 425);//Drive
         wait(()-> this.m_autoDriveSubsystem.atTarget(425));
 
         this.m_autoDriveSubsystem.stop();
@@ -158,7 +163,7 @@ public class Autonomous extends LinearOpMode
         wait(()-> this.m_autoDriveSubsystem.atTarget(450));
 
         this.m_armPositionHighBasketCommand.execute();
-        wait(()-> this.m_liftArmSubsystem.atTarget(2000) && this.m_slideArmSubsystem.atTarget(-2360));
+        wait(()-> this.m_liftArmSubsystem.atTarget(2070) && this.m_slideArmSubsystem.atTarget(-2220));
 
         this.m_intakeWheelSubsystem.spinIntake(0.5);//Score in high basket
         sleep(1000);
@@ -169,8 +174,26 @@ public class Autonomous extends LinearOpMode
         wait(()-> this.m_autoDriveSubsystem.atTarget(410));
 
         this.m_armPositionHomeCommand.execute();
-        wait(()-> this.m_liftArmSubsystem.atTarget(0) && this.m_slideArmSubsystem.atTarget(0));
+        wait(()-> this.m_liftArmSubsystem.atTarget(0) && this.m_slideArmSubsystem.atTarget(-25));
         sleep(2000);
+
+        this.m_autoDriveSubsystem.stop();
+        this.m_autoDriveSubsystem.driveRobot(512, -512, 512, -512);//45 degree Right turn
+        wait(()-> this.m_autoDriveSubsystem.atTarget(512));
+
+        this.m_autoDriveSubsystem.stop();
+        this.m_autoDriveSubsystem.driveRobot(2000, -2000, -2000, 2000);//Strafe right to samples
+        wait(()-> this.m_autoDriveSubsystem.atTarget(2000));
+
+        this.m_autoDriveSubsystem.stop();
+        this.m_autoDriveSubsystem.driveRobot(-1100, -1100, -1100, -1100);//Back up *was 645
+        wait(()-> this.m_autoDriveSubsystem.atTarget(1100));
+
+        this.m_ascentArmCommand.execute();
+        this.m_ascentArmSubsystem.ascentArm(0.78);
+        sleep(2000);
+
+
     }
 
     /**

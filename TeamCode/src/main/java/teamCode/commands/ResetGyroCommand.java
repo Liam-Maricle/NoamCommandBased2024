@@ -16,16 +16,23 @@ public class ResetGyroCommand extends CommandBase
     @Override
     public void initialize()
     {
-        m_gyroSubsystem.resetGyro();
+
     }
 
     @Override
     public void execute()
     {
+        m_gyroSubsystem.resetGyro(); //Move to execute.
     }
 
     @Override
     public void end(boolean interrupted)
     {
+    }
+
+    @Override
+    public boolean isFinished()
+    {
+        return true;
     }
 }

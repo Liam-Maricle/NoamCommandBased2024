@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import teamCode.commands.ArmFudgeFactorDownCommand;
 import teamCode.commands.ArmFudgeFactorUpCommand;
+import teamCode.commands.AscentArmCommand;
 import teamCode.commands.DriveFieldOrientedCommand;
 import teamCode.commands.ArmPositionHomeCommand;
 import teamCode.commands.ArmPositionAscentCommand;
@@ -30,16 +31,19 @@ import teamCode.commands.ArmPositionLowBasketCommand;
 import teamCode.commands.ArmPositionLowChamberCommand;
 import teamCode.commands.IntakePivotCommand;
 import teamCode.commands.IntakeWheelCommand;
+import teamCode.commands.AscentArmCommand;
 import teamCode.commands.ResetGyroCommand;
 import teamCode.commands.ResetHomeCommand;
 
 import teamCode.commands.ResetHomeCommand;
 import teamCode.commands.SlideResetCommand;
+import teamCode.commands.SlideFudgeCommand;
 import teamCode.subsystems.DriveFieldOrientedSubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
 import teamCode.subsystems.IntakePivotSubsystem;
 import teamCode.subsystems.IntakeWheelSubsystem;
+import teamCode.subsystems.AscentArmSubsystem;
 import teamCode.subsystems.GyroSubsystem;
 
 @TeleOp(name = "Sting-Ray")
@@ -70,8 +74,9 @@ public class RobotContainer extends CommandOpMode
    private Button m_dpadLeft;
    private Button m_dpadRight;
    private Button m_gyroResetButton;
-   private Button m_slideResetButton;
    private Button m_resetHomeButton;
+   private Button m_slideResetButton;
+   private Button m_slideFudgeButton;
 
    /* Motors */
    private DcMotor m_slideArmMotor;
@@ -85,6 +90,7 @@ public class RobotContainer extends CommandOpMode
    private LiftArmSubsystem m_liftArmSubsystem;
    private IntakePivotSubsystem m_intakePivotSubsystem;
    private IntakeWheelSubsystem m_intakeWheelSubsystem;
+   private AscentArmSubsystem m_ascentArmSubsystem;
    private GyroSubsystem m_gyroSubsystem;
 
 
@@ -102,9 +108,12 @@ public class RobotContainer extends CommandOpMode
    private ArmPositionHomeCommand m_armPositionHomeCommand;
    private IntakePivotCommand m_intakePivotCommand;
    private IntakeWheelCommand m_intakeWheelCommand;
+   private AscentArmCommand m_ascentArmCommand;
    private ResetGyroCommand m_resetGyroCommand;
-   private SlideResetCommand m_slideResetCommand;
    private ResetHomeCommand m_resetHomeCommand;
+   private SlideResetCommand m_slideResetCommand;
+   private SlideFudgeCommand m_slideFudgeCommand;
+
 
 
    /* PID */
@@ -162,6 +171,7 @@ public class RobotContainer extends CommandOpMode
         this.m_liftArmSubsystem = new LiftArmSubsystem(this.m_liftArmMotor)/*() -> this.m_pIDController.calculate(this.m_liftArmMotor.getCurrentPosition()))*/;
         this.m_intakePivotSubsystem = new IntakePivotSubsystem(hardwareMap, "intakePivotServo");
         this.m_intakeWheelSubsystem = new IntakeWheelSubsystem(this.m_intakeWheelServo);
+        this.m_ascentArmSubsystem = new AscentArmSubsystem(hardwareMap, "ascentArmServo");
         this.m_gyroSubsystem = new GyroSubsystem(this.m_imu);
 
         register(this.m_driveFieldOrientedSubsystem);
@@ -178,16 +188,19 @@ public class RobotContainer extends CommandOpMode
                 () -> this.m_driver2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
         this.m_intakeWheelSubsystem.setDefaultCommand(this.m_intakeWheelCommand);
 
-
         /* Event Commands */
+
+        this.m_resetHomeCommand = new ResetHomeCommand(this.m_liftArmSubsystem, this.m_slideArmSubsystem);
+        this.m_resetHomeButton = (new GamepadButton(this.m_driver2, GamepadKeys.Button.START))
+                .whenPressed(this.m_resetHomeCommand);
 
         this.m_slideResetCommand = new SlideResetCommand(m_slideArmSubsystem);
         this.m_slideResetButton = (new GamepadButton(this.m_driver2, GamepadKeys.Button.BACK))
                 .whileHeld(this.m_slideResetCommand);
 
-        this.m_resetHomeCommand = new ResetHomeCommand(this.m_liftArmSubsystem, this.m_slideArmSubsystem);
-        this.m_resetHomeButton = (new GamepadButton(this.m_driver2, GamepadKeys.Button.START))
-                .whenPressed(this.m_resetHomeCommand);
+                 this.m_slideFudgeCommand = new SlideFudgeCommand(m_slideArmSubsystem);
+                 this.m_slideFudgeButton = (new GamepadButton(this.m_driver2, GamepadKeys.Button.LEFT_STICK_BUTTON))
+                           .whileHeld(this.m_slideFudgeCommand);
 
         this.m_armFudgeFactorUpCommand = new ArmFudgeFactorUpCommand(m_liftArmSubsystem);
         this.m_dpadRight = (new GamepadButton(this.m_driver2, GamepadKeys.Button.DPAD_RIGHT))
@@ -196,11 +209,6 @@ public class RobotContainer extends CommandOpMode
         this.m_armFudgeFactorDownCommand = new ArmFudgeFactorDownCommand(m_liftArmSubsystem);
         this.m_dpadLeft = (new GamepadButton(this.m_driver2, GamepadKeys.Button.DPAD_LEFT))
                 .whenPressed(this.m_armFudgeFactorDownCommand);
-
-
-        this.m_armPositionAscentCommand = new ArmPositionAscentCommand(m_liftArmSubsystem, m_slideArmSubsystem);
-        this.m_leftBumper = (new GamepadButton(this.m_driver1, GamepadKeys.Button.LEFT_BUMPER))
-                .whenPressed(this.m_armPositionAscentCommand);
 
         this.m_armPositionCloseSampleCommand = new ArmPositionCloseSampleCommand(m_liftArmSubsystem, m_slideArmSubsystem);
         this.m_x = (new GamepadButton(this.m_driver2, GamepadKeys.Button.X))
@@ -233,6 +241,10 @@ public class RobotContainer extends CommandOpMode
         this.m_intakePivotCommand = new IntakePivotCommand(this.m_intakePivotSubsystem);
         this.m_rightBumper = (new GamepadButton(this.m_driver2, GamepadKeys.Button.RIGHT_BUMPER))
                 .whenPressed(this.m_intakePivotCommand);
+
+        this.m_ascentArmCommand = new AscentArmCommand(this.m_ascentArmSubsystem);
+        this.m_leftBumper = (new GamepadButton(this.m_driver1, GamepadKeys.Button.LEFT_BUMPER))
+                .whenPressed(this.m_ascentArmCommand);
 
         this.m_resetGyroCommand = new ResetGyroCommand(this.m_gyroSubsystem);
         this.m_gyroResetButton = (new GamepadButton(this.m_driver1, GamepadKeys.Button.START))

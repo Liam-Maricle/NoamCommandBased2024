@@ -22,7 +22,7 @@ public class ArmPositionHomeCommand extends CommandBase
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
 
-        this.m_slide = 0;
+        this.m_slide = -25;
         this.m_lift = 0;
     }
 

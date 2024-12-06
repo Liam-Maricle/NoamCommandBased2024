@@ -32,10 +32,10 @@ public class AutoDriveSubsystem extends SubsystemBase
         this.m_bLMotor.setTargetPosition(bL);
         this.m_bRMotor.setTargetPosition(bR);
 
-        this.m_fLMotor.setPower(0.45);
-        this.m_fRMotor.setPower(0.45);
-        this.m_bLMotor.setPower(0.45);
-        this.m_bRMotor.setPower(0.45);
+        this.m_fLMotor.setPower(0.5);
+        this.m_fRMotor.setPower(0.5);
+        this.m_bLMotor.setPower(0.5);
+        this.m_bRMotor.setPower(0.5);
 
         this.m_fLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.m_fRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -53,6 +53,6 @@ public class AutoDriveSubsystem extends SubsystemBase
 
     public boolean atTarget(int target)
     {
-        return Math.abs(this.m_fLMotor.getCurrentPosition()) >= target -5;
+        return Math.abs(this.m_fLMotor.getCurrentPosition()) >= target -1;
     }
 }
