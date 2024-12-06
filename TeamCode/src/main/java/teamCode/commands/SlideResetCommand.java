@@ -27,7 +27,7 @@ public class SlideResetCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_slideArmSubsystem.slideReset(m_slide);
+        this.m_slideArmSubsystem.slideFudgeFactor(m_slide);
     }
 
     @Override

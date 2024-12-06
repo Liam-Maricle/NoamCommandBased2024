@@ -21,7 +21,7 @@ public class SlideArmSubsystem extends SubsystemBase
         this.m_slideArmMotor.setPower(0.75);
         this.m_slideArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
-    public void slideReset(int pull)
+    public void slideFudgeFactor(int pull)
     {
         this.m_slideArmMotor.setTargetPosition(this.m_slideArmMotor.getCurrentPosition() + pull);
         this.m_slideArmMotor.setPower(0.75);

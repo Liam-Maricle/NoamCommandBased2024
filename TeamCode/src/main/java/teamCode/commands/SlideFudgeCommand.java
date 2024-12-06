@@ -27,7 +27,11 @@ public class SlideFudgeCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_slideArmSubsystem.slideReset(m_slide);
+        if (!m_slideArmSubsystem.atTarget(-2025))
+        {
+            this.m_slideArmSubsystem.slideFudgeFactor(m_slide);
+        }
+
     }
 
     @Override
