@@ -105,7 +105,7 @@ public class DriveFieldOrientedCommand extends CommandBase
     {
         Orientation orientation = m_imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double desiredAngle;
-        if (rightX > 0.95 || rightX < -0.95 || rightY > 0.95 || rightY < -0.95)
+        if (rightX > 0.5 || rightX < -0.5 || rightY > 0.5 || rightY < -0.5)
         {
             desiredAngle = Math.atan2(rightX, rightY * -1) * -1 * (180 / Math.PI);
         }
@@ -136,26 +136,52 @@ public class DriveFieldOrientedCommand extends CommandBase
     @Override
     public void execute()
     {
-        turnTo(this.m_rightX.getAsDouble(), this.m_rightY.getAsDouble());
-        System.out.println("Running!");
-
-        if (Math.abs(error) > 6)
-        {
-            double motorPower = (error < 0 ? -0.6 : 0.6);
-            error = error - getAngle();
-//            this.m_robot.driveWithMotorPowers(motorPower, -motorPower, motorPower, -motorPower);
-            this.m_drive.driveWithMotorPowers(motorPower, -motorPower, motorPower, -motorPower);
-        }
-        else
-        {
-            m_drive.stop();
-        }
-
+//        turnTo(this.m_rightX.getAsDouble(), this.m_rightY.getAsDouble());
+//        System.out.println("Running!");
+//
+//        if (Math.abs(error) > 6)
+//        {
+//            double motorPower = (error < 0 ? -0.6 : 0.6);
+//            error = error - getAngle();
+////            this.m_robot.driveWithMotorPowers(motorPower, -motorPower, motorPower, -motorPower);
+//            this.m_drive.driveWithMotorPowers(motorPower, -motorPower, motorPower, -motorPower);
+//        }
+//        else
+//        {
+//            m_drive.stop();
+//        }
+//
+//        this.m_drive.customFieldCentric
+//                (
+//                        this.m_leftX.getAsDouble() * this.m_leftX.getAsDouble() * this.m_leftX.getAsDouble() * -1,
+//                        this.m_leftY.getAsDouble() * this.m_leftY.getAsDouble() * this.m_leftY.getAsDouble() * -1,
+//                        this.m_imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)
+//                );
         this.m_drive.customFieldCentric
                 (
                         this.m_leftX.getAsDouble() * this.m_leftX.getAsDouble() * this.m_leftX.getAsDouble() * -1,
                         this.m_leftY.getAsDouble() * this.m_leftY.getAsDouble() * this.m_leftY.getAsDouble() * -1,
+                        test(),
                         this.m_imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)
                 );
+
+    }
+    public double test()
+    {
+        turnTo(this.m_rightX.getAsDouble(), this.m_rightY.getAsDouble());
+        System.out.println("Running!");
+
+        if (Math.abs(error) > 8)
+        {
+            double motorPower = 0.3;
+            error = error - getAngle();
+//            this.m_robot.driveWithMotorPowers(motorPower, -motorPower, motorPower, -motorPower);
+//            this.m_drive.driveWithMotorPowers(motorPower, -motorPower, motorPower, -motorPower);
+            return motorPower * error / 100 + (0.1 * (error / Math.abs(error)));
+        }
+        else
+        {
+            return 0.0;
+        }
     }
 }
