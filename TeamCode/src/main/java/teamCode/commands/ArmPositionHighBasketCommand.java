@@ -3,6 +3,7 @@ package teamCode.commands;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
+import teamCode.Constants;
 import teamCode.Logic;
 import teamCode.subsystems.LiftArmSubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
@@ -23,8 +24,8 @@ public class ArmPositionHighBasketCommand extends CommandBase
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
 
-        this.m_lift = 2070;
-        this.m_slide = -2220;
+        this.m_lift = Constants.LiftArmConstants.kLiftArmHighBasket;
+        this.m_slide = Constants.SlideArmConstants.kSlideArmHighBasket;
     }
 
     @Override

@@ -2,6 +2,7 @@ package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import teamCode.Constants;
 import teamCode.subsystems.SlideArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
 
@@ -21,8 +22,8 @@ public class ArmPositionFarSampleCommand extends CommandBase
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
 
-        this.m_lift = 440;
-        this.m_slide = -2025;
+        this.m_lift = Constants.LiftArmConstants.kLiftArmFarSample;
+        this.m_slide = Constants.SlideArmConstants.kSlideArmFarSample;
     }
 
     @Override

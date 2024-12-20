@@ -3,6 +3,7 @@ package teamCode.commands;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import teamCode.Constants;
 import teamCode.subsystems.LiftArmSubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
 
@@ -18,7 +19,7 @@ public class ArmFudgeFactorUpCommand extends CommandBase
 
         addRequirements(m_liftArmSubsystem);
 
-        this.m_lift = 50;
+        this.m_lift = Constants.LiftArmConstants.kLiftArmFudgeFactorUp;
     }
 
     @Override

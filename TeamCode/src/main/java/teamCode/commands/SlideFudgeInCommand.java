@@ -4,13 +4,13 @@ import com.arcrobotics.ftclib.command.CommandBase;
 
 import teamCode.subsystems.SlideArmSubsystem;
 
-public class SlideFudgeCommand extends CommandBase
+public class SlideFudgeInCommand extends CommandBase
 {
     private SlideArmSubsystem m_slideArmSubsystem;
 
     public int m_slide;
 
-    public SlideFudgeCommand(SlideArmSubsystem slideArmSubsystem)
+    public SlideFudgeInCommand(SlideArmSubsystem slideArmSubsystem)
     {
         this.m_slideArmSubsystem = slideArmSubsystem;
 
@@ -27,11 +27,7 @@ public class SlideFudgeCommand extends CommandBase
     @Override
     public void execute()
     {
-        if (!m_slideArmSubsystem.atTarget(-2025))
-        {
-            this.m_slideArmSubsystem.slideFudgeFactor(m_slide);
-        }
-
+        this.m_slideArmSubsystem.slideFudgeFactor(m_slide);
     }
 
     @Override

@@ -14,15 +14,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
 import teamCode.commands.ArmFudgeFactorDownCommand;
 import teamCode.commands.ArmFudgeFactorUpCommand;
 import teamCode.commands.AscentArmCommand;
 import teamCode.commands.DriveFieldOrientedCommand;
 import teamCode.commands.ArmPositionHomeCommand;
-import teamCode.commands.ArmPositionAscentCommand;
 import teamCode.commands.ArmPositionCloseSampleCommand;
 import teamCode.commands.ArmPositionFarSampleCommand;
 import teamCode.commands.ArmPositionHighBasketCommand;
@@ -31,13 +27,12 @@ import teamCode.commands.ArmPositionLowBasketCommand;
 import teamCode.commands.ArmPositionLowChamberCommand;
 import teamCode.commands.IntakePivotCommand;
 import teamCode.commands.IntakeWheelCommand;
-import teamCode.commands.AscentArmCommand;
 import teamCode.commands.ResetGyroCommand;
 import teamCode.commands.ResetHomeCommand;
 
-import teamCode.commands.ResetHomeCommand;
-import teamCode.commands.SlideResetCommand;
-import teamCode.commands.SlideFudgeCommand;
+import teamCode.commands.SlideFudgeInCommand;
+import teamCode.commands.SlideFudgeOutCommand;
+import teamCode.subsystems.CustomMecanumDriveSubsystem;
 import teamCode.subsystems.DriveFieldOrientedSubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
@@ -50,7 +45,7 @@ import teamCode.subsystems.GyroSubsystem;
 public class RobotContainer extends CommandOpMode
 {
    /* Drivetrain */
-   private MecanumDrive m_drive;
+   private CustomMecanumDriveSubsystem m_drive;
 
 
    /* IMU */
@@ -98,7 +93,6 @@ public class RobotContainer extends CommandOpMode
    private DriveFieldOrientedCommand m_driveFieldOrientedCommand;
    private ArmFudgeFactorUpCommand m_armFudgeFactorUpCommand;
    private ArmFudgeFactorDownCommand m_armFudgeFactorDownCommand;
-   private ArmPositionAscentCommand m_armPositionAscentCommand;
    private ArmPositionCloseSampleCommand m_armPositionCloseSampleCommand;
    private ArmPositionFarSampleCommand m_armPositionFarSampleCommand;
    private ArmPositionHighBasketCommand m_armPositionHighBasketCommand;
@@ -111,8 +105,8 @@ public class RobotContainer extends CommandOpMode
    private AscentArmCommand m_ascentArmCommand;
    private ResetGyroCommand m_resetGyroCommand;
    private ResetHomeCommand m_resetHomeCommand;
-   private SlideResetCommand m_slideResetCommand;
-   private SlideFudgeCommand m_slideFudgeCommand;
+   private SlideFudgeInCommand m_slideResetCommand;
+   private SlideFudgeOutCommand m_slideFudgeCommand;
 
 
 
@@ -126,7 +120,7 @@ public class RobotContainer extends CommandOpMode
 
         /* Drivetrain */
 
-        this.m_drive = new MecanumDrive
+        this.m_drive = new CustomMecanumDriveSubsystem
                 (
                         new Motor(hardwareMap, "frontLeft", Motor.GoBILDA.RPM_312),
                         new Motor(hardwareMap, "frontRight", Motor.GoBILDA.RPM_312),
@@ -166,7 +160,7 @@ public class RobotContainer extends CommandOpMode
 
         /* Subsystems */
 
-        this.m_driveFieldOrientedSubsystem = new DriveFieldOrientedSubsystem(this.m_drive);
+        this.m_driveFieldOrientedSubsystem = new DriveFieldOrientedSubsystem(this.m_drive, this.m_imu);
         this.m_slideArmSubsystem = new SlideArmSubsystem(this.m_slideArmMotor);
         this.m_liftArmSubsystem = new LiftArmSubsystem(this.m_liftArmMotor)/*() -> this.m_pIDController.calculate(this.m_liftArmMotor.getCurrentPosition()))*/;
         this.m_intakePivotSubsystem = new IntakePivotSubsystem(hardwareMap, "intakePivotServo");
@@ -180,8 +174,11 @@ public class RobotContainer extends CommandOpMode
 
         /* Default Commands */
 
-        this.m_driveFieldOrientedCommand = new DriveFieldOrientedCommand(this.m_driveFieldOrientedSubsystem, () -> this.m_driver1.getLeftX(),
-                () -> this.m_driver1.getLeftY(), () -> this.m_driver1.getRightX(),  () -> this.m_imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+//        this.m_driveFieldOrientedCommand = new DriveFieldOrientedCommand(this.m_driveFieldOrientedSubsystem, () -> this.m_driver1.getLeftX(),
+//                () -> this.m_driver1.getLeftY(), () -> this.m_driver1.getRightX(), () -> this.m_driver1.getRightY(),  () -> this.m_imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        this.m_driveFieldOrientedCommand = new DriveFieldOrientedCommand(this.m_driveFieldOrientedSubsystem, () ->this.m_driver1.getLeftX(),
+                () -> this.m_driver1.getLeftY(), () -> this.m_driver1.getRightX(), () -> this.m_driver1.getRightY(), this.m_drive, this.m_imu);
+
         this.m_driveFieldOrientedSubsystem.setDefaultCommand(this.m_driveFieldOrientedCommand);
 
         this.m_intakeWheelCommand = new IntakeWheelCommand(this.m_intakeWheelSubsystem, () -> this.m_driver2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER),
@@ -194,11 +191,11 @@ public class RobotContainer extends CommandOpMode
         this.m_resetHomeButton = (new GamepadButton(this.m_driver2, GamepadKeys.Button.START))
                 .whenPressed(this.m_resetHomeCommand);
 
-        this.m_slideResetCommand = new SlideResetCommand(m_slideArmSubsystem);
+        this.m_slideResetCommand = new SlideFudgeInCommand(m_slideArmSubsystem);
         this.m_slideResetButton = (new GamepadButton(this.m_driver2, GamepadKeys.Button.BACK))
                 .whileHeld(this.m_slideResetCommand);
 
-                 this.m_slideFudgeCommand = new SlideFudgeCommand(m_slideArmSubsystem);
+                 this.m_slideFudgeCommand = new SlideFudgeOutCommand(m_slideArmSubsystem);
                  this.m_slideFudgeButton = (new GamepadButton(this.m_driver2, GamepadKeys.Button.LEFT_STICK_BUTTON))
                            .whileHeld(this.m_slideFudgeCommand);
 
