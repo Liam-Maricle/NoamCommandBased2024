@@ -3,7 +3,6 @@ package teamCode.commands;
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import teamCode.Constants;
-import teamCode.Logic;
 import teamCode.subsystems.LiftArmSubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
 
@@ -36,8 +35,11 @@ public class ArmPositionHomeCommand extends CommandBase
     public void execute()
     {
         this.m_slideArmSubsystem.slideArm(m_slide);
-        Logic.WaitClass.wait(() -> this.m_slideArmSubsystem.atTarget(this.m_slide));
-        this.m_liftArmSubsystem.liftArm(m_lift);
+//        if(this.m_slideArmSubsystem.atTarget(this.m_slide))
+//        {
+            this.m_liftArmSubsystem.liftArm(m_lift);
+//        }
+
     }
 
     @Override

@@ -14,11 +14,11 @@ public class Constants
     {
         public static final int kLiftArmCloseSample = 129;
         public static final int kLiftArmFarSample = 440;
-        public static final int kLiftArmHighBasket = 2070;
-        public static final int kLiftArmHighChamber = 1330;
+        public static final int kLiftArmHighBasket = 2380;
+        public static final int kLiftArmHighChamber = 2380;
         public static final int kLiftArmHome = 0;
-        public static final int kLiftArmLowBasket = 1520;
-        public static final int kLiftArmLowChamber = 540;
+        public static final int kLiftArmLowBasket = 2380;
+        public static final int kLiftArmLowChamber = 2380;
         public static final int kLiftArmScoreSpecimen = 200;
         public static final int kLiftArmFudgeFactorUp = 50;
         public static final int kLiftArmFudgeFactorDown = -50;

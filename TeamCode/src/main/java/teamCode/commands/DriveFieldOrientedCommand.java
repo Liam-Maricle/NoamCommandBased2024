@@ -2,7 +2,6 @@ package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -12,56 +11,40 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.function.DoubleSupplier;
 
-import teamCode.subsystems.CustomMecanumDriveSubsystem;
-import teamCode.subsystems.DriveFieldOrientedSubsystem;
+import teamCode.subsystems.DriveSubsystem;
 
 public class DriveFieldOrientedCommand extends CommandBase
 {
-    public DriveFieldOrientedSubsystem m_driveFieldOrientedSubsystem;
+    public DriveSubsystem m_driveSubsystem;
+
     public DoubleSupplier m_leftX;
     public DoubleSupplier m_leftY;
     public DoubleSupplier m_rightX;
     public DoubleSupplier m_rightY;
 
-    public CustomMecanumDriveSubsystem m_drive;
-    private DcMotor m_fLMotor;
-    private DcMotor m_fRMotor;
-    private DcMotor m_bLMotor;
-    private DcMotor m_bRMotor;
-    private int m_fLPos;
-    private int m_fRPos;
-    private int m_bLPos;
-    private int m_bRPos;
+    public MecanumDrive m_drive;
+
     private Orientation m_lastRecordedAngle;
     private double m_currentAngle;
     private double error;
 
+
     IMU m_imu;
 
-    public DriveFieldOrientedCommand(DriveFieldOrientedSubsystem driveSubsystem, DoubleSupplier leftX, DoubleSupplier leftY, DoubleSupplier rightX, DoubleSupplier rightY, CustomMecanumDriveSubsystem drive, IMU imu)  //Constructor
+    public DriveFieldOrientedCommand(DriveSubsystem driveSubsystem, DoubleSupplier leftX, DoubleSupplier leftY, DoubleSupplier rightX, DoubleSupplier rightY, IMU imu, MecanumDrive drive)  //Constructor
     {
-        this.m_driveFieldOrientedSubsystem = driveSubsystem;
-        addRequirements(m_driveFieldOrientedSubsystem);
+        this.m_driveSubsystem = driveSubsystem;
+        addRequirements(m_driveSubsystem);
 
         this.m_leftX = leftX;
         this.m_leftY = leftY;
         this.m_rightX = rightX;
         this.m_rightY = rightY;
 
-        this.m_drive = drive;
         this.m_imu = imu;
         this.m_lastRecordedAngle = new Orientation();
         this.m_currentAngle = 0.0;
-
-    }
-
-    public void headingDrive(double leftX, double leftY, double rightX, double imu)
-    {
-
-    }
-
-    public void driveRobot(int fL, int fR, int bL, int bR)
-    {
+        this.m_drive = drive;
 
     }
 
@@ -80,7 +63,8 @@ public class DriveFieldOrientedCommand extends CommandBase
         if (deltaAngle > 180)
         {
             deltaAngle -= 360;
-        } else if (deltaAngle <= -180)
+        }
+        else if (deltaAngle <= -180)
         {
             deltaAngle += 360;
         }
@@ -95,10 +79,6 @@ public class DriveFieldOrientedCommand extends CommandBase
         resetAngle();
 
         error = degrees;
-    }
-
-    private void setAllPower(int i)
-    {
     }
 
     public void turnTo(double rightX, double rightY)
@@ -136,34 +116,16 @@ public class DriveFieldOrientedCommand extends CommandBase
     @Override
     public void execute()
     {
-//        turnTo(this.m_rightX.getAsDouble(), this.m_rightY.getAsDouble());
-//        System.out.println("Running!");
-//
-//        if (Math.abs(error) > 6)
-//        {
-//            double motorPower = (error < 0 ? -0.6 : 0.6);
-//            error = error - getAngle();
-////            this.m_robot.driveWithMotorPowers(motorPower, -motorPower, motorPower, -motorPower);
-//            this.m_drive.driveWithMotorPowers(motorPower, -motorPower, motorPower, -motorPower);
-//        }
-//        else
-//        {
-//            m_drive.stop();
-//        }
-//
-//        this.m_drive.customFieldCentric
-//                (
-//                        this.m_leftX.getAsDouble() * this.m_leftX.getAsDouble() * this.m_leftX.getAsDouble() * -1,
-//                        this.m_leftY.getAsDouble() * this.m_leftY.getAsDouble() * this.m_leftY.getAsDouble() * -1,
-//                        this.m_imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)
-//                );
-        this.m_drive.customFieldCentric
+        this.m_drive.driveFieldCentric
+
+
                 (
                         this.m_leftX.getAsDouble() * this.m_leftX.getAsDouble() * this.m_leftX.getAsDouble() * -1,
                         this.m_leftY.getAsDouble() * this.m_leftY.getAsDouble() * this.m_leftY.getAsDouble() * -1,
                         test(),
                         this.m_imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)
                 );
+//        this.m_driveSubsystem.headingDrive(this.m_leftX.getAsDouble(), this.m_leftY.getAsDouble(), this.m_rightX.getAsDouble(), this.m_rightY.getAsDouble());
 
     }
     public double test()
@@ -171,9 +133,9 @@ public class DriveFieldOrientedCommand extends CommandBase
         turnTo(this.m_rightX.getAsDouble(), this.m_rightY.getAsDouble());
         System.out.println("Running!");
 
-        if (Math.abs(error) > 8)
+        if (Math.abs(error) > 6)
         {
-            double motorPower = 0.3;
+            double motorPower = 0.5;
             error = error - getAngle();
 //            this.m_robot.driveWithMotorPowers(motorPower, -motorPower, motorPower, -motorPower);
 //            this.m_drive.driveWithMotorPowers(motorPower, -motorPower, motorPower, -motorPower);

@@ -35,7 +35,10 @@ public class ArmPositionFarSampleCommand extends CommandBase
     public void execute()
     {
         this.m_liftArmSubsystem.liftArm(m_lift);
-        this.m_slideArmSubsystem.slideArm(m_slide);
+//        if(this.m_liftArmSubsystem.atTarget(this.m_lift))
+//        {
+            this.m_slideArmSubsystem.slideArm(m_slide);
+//        }
     }
 
     @Override
