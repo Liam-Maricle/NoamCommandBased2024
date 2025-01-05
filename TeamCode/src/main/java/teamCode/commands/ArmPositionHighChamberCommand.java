@@ -34,11 +34,11 @@ public class ArmPositionHighChamberCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_liftArmSubsystem.liftArm(2380);
-//        if(this.m_liftArmSubsystem.atTarget((int)(this.m_lift * 0.75)))
-//        {
-          //  this.m_slideArmSubsystem.slideArm(m_slide);
-//        }
+        this.m_liftArmSubsystem.liftArm(m_lift);
+        if(this.m_liftArmSubsystem.atTarget((int)(this.m_lift * 0.75)))
+        {
+            this.m_slideArmSubsystem.slideArm(m_slide);
+        }
     }
 
     @Override

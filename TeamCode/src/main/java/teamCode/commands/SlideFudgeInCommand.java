@@ -2,6 +2,7 @@ package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import teamCode.Constants;
 import teamCode.subsystems.SlideArmSubsystem;
 
 public class SlideFudgeInCommand extends CommandBase
@@ -16,7 +17,7 @@ public class SlideFudgeInCommand extends CommandBase
 
         addRequirements(m_slideArmSubsystem);
 
-        this.m_slide = -100;
+        this.m_slide = Constants.SlideArmConstants.kSlideFudgeIn;
     }
 
     @Override

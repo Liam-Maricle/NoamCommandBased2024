@@ -35,10 +35,10 @@ public class ArmPositionLowBasketCommand extends CommandBase
     public void execute()
     {
         this.m_liftArmSubsystem.liftArm(this.m_lift);
-        //        if(this.m_liftArmSubsystem.atTarget((int)(this.m_lift * 0.75)))
-//        {
+                if(this.m_liftArmSubsystem.atTarget((int)(this.m_lift * 0.75)))
+        {
             this.m_slideArmSubsystem.slideArm(this.m_slide);
-//        }
+        }
     }
 
     @Override

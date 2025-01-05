@@ -35,10 +35,10 @@ public class ArmPositionHomeCommand extends CommandBase
     public void execute()
     {
         this.m_slideArmSubsystem.slideArm(m_slide);
-//        if(this.m_slideArmSubsystem.atTarget(this.m_slide))
-//        {
+        if(this.m_slideArmSubsystem.atTarget(this.m_slide))
+        {
             this.m_liftArmSubsystem.liftArm(m_lift);
-//        }
+        }
 
     }
 
