@@ -9,15 +9,11 @@ public class SlideFudgeOutCommand extends CommandBase
 {
     private SlideArmSubsystem m_slideArmSubsystem;
 
-    public int m_slide;
-
     public SlideFudgeOutCommand(SlideArmSubsystem slideArmSubsystem)
     {
         this.m_slideArmSubsystem = slideArmSubsystem;
 
         addRequirements(m_slideArmSubsystem);
-
-        this.m_slide = Constants.SlideArmConstants.kSlideFudgeOut;
     }
 
     @Override
@@ -30,7 +26,7 @@ public class SlideFudgeOutCommand extends CommandBase
     {
         if (!m_slideArmSubsystem.atTarget(2025))
         {
-            this.m_slideArmSubsystem.slideFudgeFactor(m_slide);
+            this.m_slideArmSubsystem.slideFudgeFactor(Constants.SlideArmConstants.kSlideFudgeOut);
         }
 
     }

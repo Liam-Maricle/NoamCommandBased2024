@@ -19,11 +19,6 @@ public class ArmPositionLowChamberCommand extends CommandBase
     {
         this.m_liftArmSubsystem = liftArmSubsystem;
         this.m_slideArmSubsystem = slideArmSubsystem;
-
-        addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
-
-        this.m_lift = Constants.LiftArmConstants.kLiftArmLowChamber;
-        this.m_slide = Constants.SlideArmConstants.kSlideArmLowChamber;
     }
 
     @Override
@@ -34,10 +29,10 @@ public class ArmPositionLowChamberCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_liftArmSubsystem.liftArm(m_lift);
-        if(this.m_liftArmSubsystem.atTarget((int)(this.m_lift * 0.75)))
+        this.m_liftArmSubsystem.liftArm(Constants.LiftArmConstants.kLiftArmLowChamber);
+        if(this.m_liftArmSubsystem.atTarget((int)(Constants.LiftArmConstants.kLiftArmLowChamber * 0.75)))
         {
-            this.m_slideArmSubsystem.slideArm(m_slide);
+            this.m_slideArmSubsystem.slideArm(Constants.SlideArmConstants.kSlideArmLowChamber);
        }
 
     }

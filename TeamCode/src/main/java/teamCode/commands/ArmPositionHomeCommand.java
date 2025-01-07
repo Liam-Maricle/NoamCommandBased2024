@@ -21,9 +21,6 @@ public class ArmPositionHomeCommand extends CommandBase
         this.m_liftArmSubsystem = liftArmSubsystem;
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
-
-        this.m_slide = Constants.SlideArmConstants.kSlideArmHome;
-        this.m_lift = Constants.LiftArmConstants.kLiftArmHome;
     }
 
     @Override
@@ -34,10 +31,10 @@ public class ArmPositionHomeCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_slideArmSubsystem.slideArm(m_slide);
-        if(this.m_slideArmSubsystem.atTarget(this.m_slide))
+        this.m_slideArmSubsystem.slideArm(Constants.SlideArmConstants.kSlideArmHome);
+        if(this.m_slideArmSubsystem.atTarget(Constants.SlideArmConstants.kSlideArmHome))
         {
-            this.m_liftArmSubsystem.liftArm(m_lift);
+            this.m_liftArmSubsystem.liftArm(Constants.LiftArmConstants.kLiftArmHome);
         }
 
     }

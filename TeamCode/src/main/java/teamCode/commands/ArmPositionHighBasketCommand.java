@@ -5,25 +5,25 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import teamCode.Constants;
 import teamCode.subsystems.LiftArmSubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
+import teamCode.subsystems.IntakePivotSubsystem;
 
 public class ArmPositionHighBasketCommand extends CommandBase
 {
     private LiftArmSubsystem m_liftArmSubsystem;
     private SlideArmSubsystem m_slideArmSubsystem;
+    private IntakePivotSubsystem m_intakePivotSubsystem;
 
     public int m_lift;
     public int m_slide;
+    public double m_score;
 
     public ArmPositionHighBasketCommand(LiftArmSubsystem liftArmSubsystem,
-                                        SlideArmSubsystem slideArmSubsystem)
+                                        SlideArmSubsystem slideArmSubsystem, IntakePivotCommand intakePivotCommand)
     {
         this.m_liftArmSubsystem = liftArmSubsystem;
         this.m_slideArmSubsystem = slideArmSubsystem;
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
-
-        this.m_lift = Constants.LiftArmConstants.kLiftArmHighBasket;
-        this.m_slide = Constants.SlideArmConstants.kSlideArmHighBasket;
     }
 
     @Override
@@ -34,11 +34,13 @@ public class ArmPositionHighBasketCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_liftArmSubsystem.liftArm(m_lift);
-        if(this.m_liftArmSubsystem.atTarget((int)(this.m_lift * 0.75)))
+        this.m_liftArmSubsystem.liftArm(Constants.LiftArmConstants.kLiftArmHighBasket);
+        if(this.m_liftArmSubsystem.atTarget((int)(Constants.LiftArmConstants.kLiftArmHighBasket * 0.75)))
         {
-            this.m_slideArmSubsystem.slideArm(m_slide);
+            this.m_slideArmSubsystem.slideArm(Constants.SlideArmConstants.kSlideArmHighBasket);
+            this.m_intakePivotSubsystem.pivotIntake(Constants.PivotIntakeConstants.kIntakePivotScore);//Pivot intake
         }
+
     }
 
     @Override

@@ -21,9 +21,6 @@ public class ArmPositionFarSampleCommand extends CommandBase
         this.m_slideArmSubsystem = slideArmSubsystem;
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
-
-        this.m_lift = Constants.LiftArmConstants.kLiftArmFarSample;
-        this.m_slide = Constants.SlideArmConstants.kSlideArmFarSample;
     }
 
     @Override
@@ -34,10 +31,10 @@ public class ArmPositionFarSampleCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_liftArmSubsystem.liftArm(m_lift);
-        if(this.m_liftArmSubsystem.atTarget(this.m_lift))
+        this.m_liftArmSubsystem.liftArm(Constants.LiftArmConstants.kLiftArmFarSample);
+        if(this.m_liftArmSubsystem.atTarget(Constants.LiftArmConstants.kLiftArmFarSample))
         {
-            this.m_slideArmSubsystem.slideArm(m_slide);
+            this.m_slideArmSubsystem.slideArm(Constants.SlideArmConstants.kSlideArmFarSample);
         }
     }
 

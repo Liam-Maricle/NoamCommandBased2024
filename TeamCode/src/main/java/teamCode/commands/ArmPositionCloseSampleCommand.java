@@ -21,9 +21,6 @@ public class ArmPositionCloseSampleCommand extends CommandBase
         this.m_slideArmSubsystem = slideArmSubsystem;
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
-
-        this.m_lift = Constants.LiftArmConstants.kLiftArmCloseSample;
-        this.m_slide = Constants.SlideArmConstants.kSlideArmCloseSample;
     }
 
     @Override
@@ -34,10 +31,10 @@ public class ArmPositionCloseSampleCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_liftArmSubsystem.liftArm(m_lift);
-        if(this.m_liftArmSubsystem.atTarget((int)(this.m_lift * 0.75)))
+        this.m_liftArmSubsystem.liftArm(Constants.LiftArmConstants.kLiftArmCloseSample);
+        if(this.m_liftArmSubsystem.atTarget((int)(Constants.LiftArmConstants.kLiftArmCloseSample * 0.75)))
         {
-            this.m_slideArmSubsystem.slideArm(m_slide);
+            this.m_slideArmSubsystem.slideArm(Constants.SlideArmConstants.kSlideArmCloseSample);
         }
     }
 

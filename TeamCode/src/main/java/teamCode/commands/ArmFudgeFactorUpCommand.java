@@ -16,8 +16,6 @@ public class ArmFudgeFactorUpCommand extends CommandBase
         this.m_liftArmSubsystem = liftArmSubsystem;
 
         addRequirements(m_liftArmSubsystem);
-
-        this.m_lift = Constants.LiftArmConstants.kLiftArmFudgeFactorUp;
     }
 
     @Override
@@ -28,7 +26,7 @@ public class ArmFudgeFactorUpCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_liftArmSubsystem.fudgeFactor(m_lift);
+        this.m_liftArmSubsystem.fudgeFactor(Constants.LiftArmConstants.kLiftArmFudgeFactorUp);
     }
 
     @Override

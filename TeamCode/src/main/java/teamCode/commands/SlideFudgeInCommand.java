@@ -9,15 +9,11 @@ public class SlideFudgeInCommand extends CommandBase
 {
     private SlideArmSubsystem m_slideArmSubsystem;
 
-    public int m_slide;
-
     public SlideFudgeInCommand(SlideArmSubsystem slideArmSubsystem)
     {
         this.m_slideArmSubsystem = slideArmSubsystem;
 
         addRequirements(m_slideArmSubsystem);
-
-        this.m_slide = Constants.SlideArmConstants.kSlideFudgeIn;
     }
 
     @Override
@@ -28,7 +24,7 @@ public class SlideFudgeInCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_slideArmSubsystem.slideFudgeFactor(m_slide);
+        this.m_slideArmSubsystem.slideFudgeFactor(Constants.SlideArmConstants.kSlideFudgeIn);
     }
 
     @Override
