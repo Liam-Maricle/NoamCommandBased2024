@@ -2,6 +2,7 @@ package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import teamCode.Constants;
 import teamCode.subsystems.SlideArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
 
@@ -10,9 +11,6 @@ public class ArmPositionFarSampleCommand extends CommandBase
     private LiftArmSubsystem m_liftArmSubsystem;
     private SlideArmSubsystem m_slideArmSubsystem;
 
-    public int m_lift;
-    public int m_slide;
-
     public ArmPositionFarSampleCommand(LiftArmSubsystem liftArmSubsystem,
                                        SlideArmSubsystem slideArmSubsystem)
     {
@@ -20,9 +18,6 @@ public class ArmPositionFarSampleCommand extends CommandBase
         this.m_slideArmSubsystem = slideArmSubsystem;
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
-
-        this.m_lift = 440;
-        this.m_slide = -2025;
     }
 
     @Override
@@ -33,8 +28,11 @@ public class ArmPositionFarSampleCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_liftArmSubsystem.liftArm(m_lift);
-        this.m_slideArmSubsystem.slideArm(m_slide);
+        this.m_liftArmSubsystem.liftArm(Constants.LiftArmConstants.kLiftArmFarSample);
+        if (m_liftArmSubsystem.atTarget((int) (Constants.LiftArmConstants.kLiftArmFarSample)))
+        {
+            this.m_slideArmSubsystem.slideArm(Constants.SlideArmConstants.kSlideArmFarSample);
+        }
     }
 
     @Override

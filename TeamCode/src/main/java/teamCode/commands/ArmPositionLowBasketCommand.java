@@ -1,7 +1,9 @@
 package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 
+import teamCode.Constants;
 import teamCode.subsystems.SlideArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
 
@@ -10,9 +12,6 @@ public class ArmPositionLowBasketCommand extends CommandBase
     private LiftArmSubsystem m_liftArmSubsystem;
     private SlideArmSubsystem m_slideArmSubsystem;
 
-    public int m_lift;
-    public int m_slide;
-
     public ArmPositionLowBasketCommand(LiftArmSubsystem liftArmSubsystem,
                                        SlideArmSubsystem slideArmSubsystem)
     {
@@ -20,9 +19,6 @@ public class ArmPositionLowBasketCommand extends CommandBase
         this.m_slideArmSubsystem = slideArmSubsystem;
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
-
-        this.m_lift = 1520;
-        this.m_slide = -900;
     }
 
     @Override
@@ -33,8 +29,11 @@ public class ArmPositionLowBasketCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_liftArmSubsystem.liftArm(m_lift);
-        this.m_slideArmSubsystem.slideArm(m_slide);
+        this.m_liftArmSubsystem.liftArm(Constants.LiftArmConstants.kLiftArmLowBasket);
+        if (m_liftArmSubsystem.atTarget(Constants.LiftArmConstants.kLiftArmLowBasket))
+        {
+            this.m_slideArmSubsystem.slideArm(Constants.SlideArmConstants.kSlideArmLowBasket);
+        }
     }
 
     @Override

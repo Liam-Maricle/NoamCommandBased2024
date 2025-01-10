@@ -43,12 +43,19 @@ public class DriveSubsystem extends SubsystemBase
     public void headingDrive(double leftX, double leftY, double rightX, double rightY)
     {
         m_drive.driveFieldCentric
-        (
-            leftX * leftX * leftX * -1,
-            leftY * leftY * leftY * -1,
-            getTurnPower(rightX, rightY),
-            this.m_imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)
-        );
+                (
+                        leftX * leftX * leftX * -1,
+                        leftY * leftY * leftY * -1,
+                        getTurnPower(rightX, rightY),
+                        this.m_imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)
+                );
+//        System.out.println("Error: " + error);
+//        getTurnPower(rightX, rightY);
+
+//        System.out.println("Error: " + error);
+//        System.out.println("Error: " + error);
+//        System.out.println(this.m_imu.getRobotYawPitchRollAngles().getYaw());
+//        System.out.println("Turn angle: " + Math.atan2(rightX, rightY * -1) * -1 * (180 / Math.PI));
     }
 
     public void driveRobot(int fL, int fR, int bL, int bR)
@@ -79,9 +86,9 @@ public class DriveSubsystem extends SubsystemBase
         turnTo(rightX, rightY);
         System.out.println("Running!");
 
-        if (Math.abs(error) > 8)
+        if (Math.abs(error) > 6)
         {
-            double motorPower = 0.3;
+            double motorPower = 0.5;
             error = error - getAngle();
 //            this.m_robot.driveWithMotorPowers(motorPower, -motorPower, motorPower, -motorPower);
 //            this.m_drive.driveWithMotorPowers(motorPower, -motorPower, motorPower, -motorPower);
@@ -95,7 +102,7 @@ public class DriveSubsystem extends SubsystemBase
 
     public void turnTo(double rightX, double rightY)
     {
-        Orientation orientation = m_imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.DEGREES);
+        Orientation orientation = m_imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double desiredAngle;
         if (rightX > 0.5 || rightX < -0.5 || rightY > 0.5 || rightY < -0.5)
         {
@@ -128,13 +135,13 @@ public class DriveSubsystem extends SubsystemBase
     }
     public void resetAngle()
     {
-        m_lastRecordedAngle = m_imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.DEGREES); // .getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YXZ, BNO055IMU.AngleUnit.DEGREES.toAngleUnit());
+        m_lastRecordedAngle = m_imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES); // .getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YXZ, BNO055IMU.AngleUnit.DEGREES.toAngleUnit());
         m_currentAngle = 0;
     }
 
     public double getAngle()
     {
-        Orientation orientation = this.m_imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.DEGREES);
+        Orientation orientation = this.m_imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = orientation.firstAngle - m_lastRecordedAngle.firstAngle;
 

@@ -24,11 +24,10 @@ public class ClimbArmDownCommand extends CommandBase
     @Override
     public void execute()
     {
-//        if (!m_climbArmSubsystem.atTarget(0))
-//        {
-//            this.m_climbArmSubsystem.climb(m_down);
-//        }
-        this.m_climbArmSubsystem.climb(Constants.ClimbArmConstants.kClimberArmDown);
+        if (!m_climbArmSubsystem.atTarget(0))
+        {
+            this.m_climbArmSubsystem.climb(Constants.ClimbArmConstants.kClimberArmDown);
+        }
     }
 
     @Override

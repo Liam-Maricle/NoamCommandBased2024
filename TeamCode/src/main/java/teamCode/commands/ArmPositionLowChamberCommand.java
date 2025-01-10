@@ -2,6 +2,7 @@ package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import teamCode.Constants;
 import teamCode.Logic;
 import teamCode.subsystems.SlideArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
@@ -11,9 +12,6 @@ public class ArmPositionLowChamberCommand extends CommandBase
     private LiftArmSubsystem m_liftArmSubsystem;
     private SlideArmSubsystem m_slideArmSubsystem;
 
-    public int m_lift;
-    public int m_slide;
-
     public ArmPositionLowChamberCommand(LiftArmSubsystem liftArmSubsystem,
                                         SlideArmSubsystem slideArmSubsystem)
     {
@@ -21,9 +19,6 @@ public class ArmPositionLowChamberCommand extends CommandBase
         this.m_slideArmSubsystem = slideArmSubsystem;
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
-
-        this.m_lift = 540;
-        this.m_slide = -30;
     }
 
     @Override
@@ -34,10 +29,14 @@ public class ArmPositionLowChamberCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_liftArmSubsystem.liftArm(m_lift);
-        Logic.WaitClass.wait(() -> this.m_liftArmSubsystem.atTarget(this.m_lift-200));
-        this.m_slideArmSubsystem.slideArm(m_slide);
+
+        this.m_liftArmSubsystem.liftArm(Constants.LiftArmConstants.kLiftArmLowChamber);
+        if (m_liftArmSubsystem.atTarget(Constants.LiftArmConstants.kLiftArmLowChamber))
+        {
+            this.m_slideArmSubsystem.slideArm(Constants.SlideArmConstants.kSlideArmLowChamber);
+        }
     }
+
 
     @Override
     public void end(boolean interrupted)

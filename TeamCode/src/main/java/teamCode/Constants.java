@@ -12,7 +12,7 @@ public class Constants
 
     public static final class LiftArmConstants
     {
-        public static final int kLiftArmCloseSample = 175;
+        public static final int kLiftArmCloseSample = 155;
         public static final int kLiftArmFarSample = 520;
         public static final int kLiftArmHighBasket = 2400;
         public static final int kLiftArmHighChamber = 2400;
@@ -38,7 +38,7 @@ public class Constants
     }
     public static final class PivotIntakeConstants
     {
-        public static final double kIntakePivotScore = 0.25;
+        public static final double kIntakePivotScore = 0.65;
         public static final double kIntakePivotPickUp = 0.5;
 
     }

@@ -2,6 +2,7 @@ package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import teamCode.Constants;
 import teamCode.Logic;
 import teamCode.subsystems.LiftArmSubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
@@ -11,8 +12,6 @@ public class ArmPositionHomeCommand extends CommandBase
     private LiftArmSubsystem m_liftArmSubsystem;
     private SlideArmSubsystem m_slideArmSubsystem;
 
-    public int m_lift;
-    public int m_slide;
 
     public ArmPositionHomeCommand (LiftArmSubsystem liftArmSubsystem,
                                   SlideArmSubsystem slideArmSubsystem)
@@ -21,9 +20,6 @@ public class ArmPositionHomeCommand extends CommandBase
         this.m_liftArmSubsystem = liftArmSubsystem;
 
         addRequirements(m_liftArmSubsystem, m_slideArmSubsystem);
-
-        this.m_slide = -25;
-        this.m_lift = 0;
     }
 
     @Override
@@ -34,9 +30,12 @@ public class ArmPositionHomeCommand extends CommandBase
     @Override
     public void execute()
     {
-        this.m_slideArmSubsystem.slideArm(m_slide);
-        Logic.WaitClass.wait(() -> this.m_slideArmSubsystem.atTarget(this.m_slide));
-        this.m_liftArmSubsystem.liftArm(m_lift);
+        this.m_slideArmSubsystem.slideArm(Constants.SlideArmConstants.kSlideArmHome);
+
+        if (m_slideArmSubsystem.atTarget(Constants.SlideArmConstants.kSlideArmHome))
+        {
+            this.m_liftArmSubsystem.liftArm(Constants.LiftArmConstants.kLiftArmHome);
+        }
     }
 
     @Override

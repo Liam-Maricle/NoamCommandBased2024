@@ -38,7 +38,7 @@ public class LiftArmSubsystem extends SubsystemBase
 
     public boolean atTarget(int target)
     {
-        return this.m_liftArmMotor.getCurrentPosition() >= target-5 || this.m_liftArmMotor.getCurrentPosition() >= target+5;
+        return this.m_liftArmMotor.getCurrentPosition() >= target-5 && this.m_liftArmMotor.getCurrentPosition() <= target+5;
     }
 
     public void stop()

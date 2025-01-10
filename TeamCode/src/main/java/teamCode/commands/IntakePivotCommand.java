@@ -2,12 +2,13 @@ package teamCode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import teamCode.Constants;
 import teamCode.subsystems.IntakePivotSubsystem;
 
 public class IntakePivotCommand extends CommandBase
 {
-    private static final double m_samplePos = 0.45;
-    private static final double m_specimenPos = 0.85;
+    private static final double m_samplePos = Constants.PivotIntakeConstants.kIntakePivotPickUp;
+    private static final double m_specimenPos = Constants.PivotIntakeConstants.kIntakePivotScore;
     private final IntakePivotSubsystem m_intakePivotSubsystem;
     private int m_position;
     private static final int  m_sample = 1;
