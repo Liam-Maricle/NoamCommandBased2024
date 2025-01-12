@@ -29,7 +29,6 @@ public class SlideArmSubsystem extends SubsystemBase
         this.m_slideArmMotor.setPower(0.75);
         this.m_slideArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
-
     public boolean atTarget(double target)
     {
         return this.m_slideArmMotor.getCurrentPosition() <= target+5 && this.m_slideArmMotor.getCurrentPosition() >= target-5;

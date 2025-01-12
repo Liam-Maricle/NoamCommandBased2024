@@ -27,12 +27,14 @@ import teamCode.commands.ArmPositionLowBasketCommand;
 import teamCode.commands.ArmPositionLowChamberCommand;
 import teamCode.commands.IntakePivotCommand;
 import teamCode.commands.IntakeWheelCommand;
+//import teamCode.commands.PinPointOdometryCommand;
 import teamCode.commands.ResetGyroCommand;
 import teamCode.commands.ResetHomeCommand;
 
 import teamCode.commands.SlideFudgeInCommand;
 import teamCode.commands.SlideFudgeOutCommand;
 import teamCode.subsystems.DriveSubsystem;
+//import teamCode.subsystems.PinPointOdometrySubsystem;
 import teamCode.subsystems.SlideArmSubsystem;
 import teamCode.subsystems.LiftArmSubsystem;
 import teamCode.subsystems.IntakePivotSubsystem;
@@ -71,6 +73,7 @@ public class RobotContainer extends CommandOpMode
     private Button m_resetHomeButton;
     private Button m_slideFudgeInButton;
     private Button m_slideFudgeOutButton;
+    private Button m_odoResetButton;
 
     /* Motors */
     private DcMotor m_slideArmMotor;
@@ -86,6 +89,7 @@ public class RobotContainer extends CommandOpMode
     private IntakeWheelSubsystem m_intakeWheelSubsystem;
     private AscentArmSubsystem m_ascentArmSubsystem;
     private GyroSubsystem m_gyroSubsystem;
+//    private PinPointOdometrySubsystem m_pinPointOdometrySubsystem;
 
 
     /* Commands */
@@ -106,6 +110,8 @@ public class RobotContainer extends CommandOpMode
     private ResetHomeCommand m_resetHomeCommand;
     private SlideFudgeInCommand m_slideFudgeInCommand;
     private SlideFudgeOutCommand m_slideFudgeOutCommand;
+//    private GoBildaPinpointDriver m_goBilda;
+//    private PinPointOdometryCommand m_pinPointOdometryCommand;
 
 
 
@@ -166,6 +172,7 @@ public class RobotContainer extends CommandOpMode
         this.m_intakeWheelSubsystem = new IntakeWheelSubsystem(this.m_intakeWheelServo);
         this.m_ascentArmSubsystem = new AscentArmSubsystem(hardwareMap, "ascentArmServo");
         this.m_gyroSubsystem = new GyroSubsystem(this.m_imu);
+//        this.m_pinPointOdometrySubsystem = new PinPointOdometrySubsystem(m_goBilda);
 
         register(this.m_driveSubsystem);
         register(this.m_intakeWheelSubsystem);
@@ -245,6 +252,12 @@ public class RobotContainer extends CommandOpMode
         this.m_resetGyroCommand = new ResetGyroCommand(this.m_gyroSubsystem);
         this.m_gyroResetButton = (new GamepadButton(this.m_driver1, GamepadKeys.Button.START))
                 .whenPressed(this.m_resetGyroCommand);
+
+//        this.m_pinPointOdometrySubsystem = new PinPointOdometrySubsystem(m_goBilda);
+//        this.m_odoResetButton = (new GamepadButton(this.m_driver1, GamepadKeys.Button.BACK))
+//                .whenPressed(this.m_pinPointOdometryCommand);
+
+
 
 //        for (int i = 1; i>0; i+=0)
 //        {
